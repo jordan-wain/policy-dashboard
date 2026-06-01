@@ -1,151 +1,1014 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Policy Regulatory Dashboard</title>
-<style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#0f1117; color:#e0e0e0; }
-  .header { background:linear-gradient(135deg,#1a1d2e 0%,#2d1f3d 100%); padding:28px 40px; border-bottom:1px solid #2a2d3e; }
-  .header h1 { font-size:24px; font-weight:600; color:#fff; }
-  .header .subtitle { font-size:13px; color:#8b8fa3; margin-top:4px; }
-  .header .updated { float:right; font-size:12px; color:#6b6f83; margin-top:-30px; }
-  .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding:20px 40px; }
-  .grid-1 { grid-template-columns:1fr; }
-  .card { background:#1a1d2e; border:1px solid #2a2d3e; border-radius:12px; padding:20px; }
-  .card h3 { font-size:13px; font-weight:500; color:#8b8fa3; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
-  .card .explainer { font-size:11px; color:#6b6f83; margin-bottom:10px; line-height:1.5; }
-  .card .big-number { font-size:42px; font-weight:700; color:#fff; }
-  .stat-pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:500; margin:2px; }
-  .pill-red { background:rgba(239,68,68,0.15); color:#f87171; }
-  .pill-green { background:rgba(74,222,128,0.15); color:#4ade80; }
-  .pill-blue { background:rgba(96,165,250,0.15); color:#60a5fa; }
-  .pill-grey { background:rgba(148,163,184,0.15); color:#94a3b8; }
-  .pill-purple { background:rgba(167,139,250,0.15); color:#a78bfa; }
-  .section-title { padding:24px 40px 8px; font-size:11px; font-weight:600; color:#6b6f83; text-transform:uppercase; letter-spacing:1px; }
-  table { width:100%; border-collapse:collapse; font-size:13px; }
-  table th { text-align:left; padding:8px 12px; color:#8b8fa3; font-weight:500; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid #2a2d3e; }
-  table td { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.03); }
-  table tr:hover { background:rgba(255,255,255,0.02); }
-  table a { color:#4ade80; text-decoration:none; }
-  .priority-badge { padding:2px 8px; border-radius:4px; font-size:11px; font-weight:600; }
-  .badge-p1 { background:rgba(239,68,68,0.15); color:#f87171; }
-  .badge-p2 { background:rgba(251,146,60,0.15); color:#fb923c; }
-  .badge-open { background:rgba(74,222,128,0.15); color:#4ade80; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
-  .badge-upcoming { background:rgba(251,191,36,0.15); color:#fbbf24; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
-</style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Policy Regulatory Dashboard — Chainalysis</title>
+    <style>
+      :root {
+        --background: #0f1117;
+        --foreground: #e0e0e0;
+        --card: #1a1d2e;
+        --card-foreground: #e0e0e0;
+        --muted: #2a2d3e;
+        --muted-foreground: #8b8fa3;
+        --border: #2a2d3e;
+        --input: #2a2d3e;
+        --primary: #4ade80;
+        --primary-foreground: #0f1117;
+        --secondary: #2a2d3e;
+        --secondary-foreground: #e0e0e0;
+        --destructive: #f87171;
+        --destructive-foreground: #fff;
+        --success: #4ade80;
+        --warning: #fbbf24;
+        --info: #60a5fa;
+        --ring: #4ade80;
+        --chart-1: #1d4ed8;
+        --chart-2: #10b981;
+        --chart-3: #f59e0b;
+        --chart-4: #a855f7;
+        --chart-5: #f43f5e;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--background); color: var(--foreground); line-height: 1.6; }
+      a { color: var(--primary); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      hr { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+      .bg-background { background: var(--background); }
+      .bg-card { background: var(--card); }
+      .bg-muted { background: var(--muted); }
+      .text-foreground { color: var(--foreground); }
+      .text-card-foreground { color: var(--card-foreground); }
+      .text-muted-foreground { color: var(--muted-foreground); }
+      .text-primary { color: var(--primary); }
+      .text-destructive { color: var(--destructive); }
+      .text-success { color: var(--success); }
+      .text-warning { color: var(--warning); }
+      .text-info { color: var(--info); }
+      .min-h-screen { min-height: 100vh; }
+      .max-w-5xl { max-width: 64rem; }
+      .mx-auto { margin-left: auto; margin-right: auto; }
+      .px-4 { padding-left: 1rem; padding-right: 1rem; }
+      .py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+      .p-4 { padding: 1rem; }
+      .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+      .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+      .pt-3 { padding-top: 0.75rem; }
+      .mb-1 { margin-bottom: 0.25rem; }
+      .mb-3 { margin-bottom: 0.75rem; }
+      .mb-4 { margin-bottom: 1rem; }
+      .mt-1 { margin-top: 0.25rem; }
+      .ml-2 { margin-left: 0.5rem; }
+      .pt-6 { padding-top: 1.5rem; }
+      .space-y-6 > * + * { margin-top: 1.5rem; }
+      .space-y-3 > * + * { margin-top: 0.75rem; }
+      .space-y-1 > * + * { margin-top: 0.25rem; }
+      .gap-1 { gap: 0.25rem; }
+      .gap-2 { gap: 0.5rem; }
+      .gap-3 { gap: 0.75rem; }
+      .gap-4 { gap: 1rem; }
+      .flex { display: flex; }
+      .flex-col { flex-direction: column; }
+      .flex-wrap { flex-wrap: wrap; }
+      .items-center { align-items: center; }
+      .justify-between { justify-content: space-between; }
+      .grid { display: grid; }
+      .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+      .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .text-xs { font-size: 0.75rem; line-height: 1rem; }
+      .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+      .text-base { font-size: 1rem; }
+      .text-lg { font-size: 1.125rem; }
+      .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+      .font-medium { font-weight: 500; }
+      .font-semibold { font-weight: 600; }
+      .font-bold { font-weight: 700; }
+      .tracking-tight { letter-spacing: -0.025em; }
+      .tracking-wide { letter-spacing: 0.025em; }
+      .uppercase { text-transform: uppercase; }
+      .leading-relaxed { line-height: 1.625; }
+      .text-left { text-align: left; }
+      .text-right { text-align: right; }
+      .text-center { text-align: center; }
+      .rounded-xl { border-radius: 0.75rem; }
+      .rounded-full { border-radius: 9999px; }
+      .overflow-x-auto { overflow-x: auto; }
+      .border-b { border-bottom: 1px solid var(--border); }
+      .border-t { border-top: 1px solid var(--border); }
+      .divide-y > * + * { border-top: 1px solid var(--border); }
+      .ring-1 { box-shadow: 0 0 0 1px rgba(255,255,255,0.06); }
+      .ring-foreground\/10 { box-shadow: 0 0 0 1px rgba(255,255,255,0.06); }
+      .w-full { width: 100%; }
+      .h-5 { height: 1.25rem; }
+      .inline-flex { display: inline-flex; }
+      .transition-colors { transition: color 0.15s, background-color 0.15s; }
+      .cursor-pointer { cursor: pointer; }
+      .border-border { border-color: var(--border); }
+      .border-transparent { border-color: transparent; }
+      .bg-success\/10 { background: rgba(74,222,128,0.1); }
+      .bg-warning\/10 { background: rgba(251,191,36,0.1); }
+      .bg-destructive\/10 { background: rgba(248,113,113,0.1); }
+      .bg-info\/10 { background: rgba(96,165,250,0.1); }
+      .bg-muted\/50 { background: rgba(42,45,62,0.5); }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { text-align: left; }
+      tr:hover { background: rgba(255,255,255,0.02); }
+      .hover\:bg-muted:hover { background: var(--muted); }
+      .hover\:underline:hover { text-decoration: underline; }
+      @media (min-width: 768px) {
+        .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .md\:flex-row { flex-direction: row; }
+      }
+    </style>
+    <style>
+      .kpi-big { font-size: 2.75rem; font-weight: 700; line-height: 1; }
+      .pill { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 9999px; font-size: 0.6875rem; font-weight: 500; margin: 2px; }
+      .badge-p1 { padding: 2px 8px; border-radius: 4px; font-size: 0.6875rem; font-weight: 600; }
+      .badge-p2 { padding: 2px 8px; border-radius: 4px; font-size: 0.6875rem; font-weight: 600; }
+      .badge-p3 { padding: 2px 8px; border-radius: 4px; font-size: 0.6875rem; font-weight: 600; }
+      .theme-quote { font-size: 0.6875rem; font-style: italic; border-left: 2px solid var(--border); padding-left: 12px; margin-top: 6px; }
+      .insight-callout { border-left: 3px solid; padding: 12px 16px; border-radius: 0 8px 8px 0; }
+      .chart-container { position: relative; width: 100%; }
+      details summary { cursor: pointer; list-style: none; }
+      details summary::-webkit-details-marker { display: none; }
+      details summary::before { content: '▶ '; font-size: 0.7rem; display: inline-block; transition: transform 0.2s; margin-right: 4px; }
+      details[open] summary::before { transform: rotate(90deg); }
+      .cat-detail-item { padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 0.8125rem; }
+      .cat-detail-item:last-child { border-bottom: none; }
+      .cat-channel { display: inline-flex; align-items: center; padding: 1px 6px; border-radius: 4px; font-size: 0.6875rem; font-weight: 500; margin: 1px; }
+    </style>
+  </head>
+  <body class="bg-background text-foreground min-h-screen">
+    <div class="max-w-5xl mx-auto px-4 py-10 space-y-6">
 
-<div class="header">
-  <div class="updated">Last updated: 31 May 2026</div>
-  <h1>Policy Regulatory Dashboard</h1>
-  <div class="subtitle">Chainalysis Policy Team &mdash; Strategic engagement tracker</div>
-</div>
+      <!-- Header -->
+      <div>
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold tracking-tight">Policy Regulatory Dashboard</h1>
+            <p class="text-muted-foreground text-sm mt-1">Chainalysis Policy Team — Strategic engagement tracker &amp; 2026 activity audit</p>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-muted-foreground">Last updated: 27 May 2026</span>
+          </div>
+        </div>
+      </div>
 
-<div class="grid">
-  <div class="card">
-    <h3>Items Tracked</h3>
-    <div class="big-number">255</div>
-    <span class="stat-pill pill-green">6 responded</span>
-    <span class="stat-pill pill-blue">18 open</span>
-  </div>
-  <div class="card">
-    <h3>Responses Submitted</h3>
-    <div class="big-number" style="color:#4ade80;">6</div>
-  </div>
-  <div class="card">
-    <h3>Response Required</h3>
-    <div class="big-number" style="color:#fb923c;">18</div>
-    <span class="stat-pill pill-red">1 unassigned</span>
-  </div>
-  <div class="card">
-    <h3>Events &amp; Speaking</h3>
-    <div class="big-number" style="color:#a78bfa;">2</div>
-    <span class="stat-pill pill-purple">1 confirmed</span>
-  </div>
-</div>
+      <!-- KPI Cards Row -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 p-4 flex flex-col gap-2">
+          <span class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Items Tracked</span>
+          <span class="kpi-big">251</span>
+          <div>
+            <span class="pill bg-success/10 text-success">75 in progress</span>
+            <span class="pill bg-info/10 text-info">73 forthcoming</span>
+          </div>
+        </div>
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 p-4 flex flex-col gap-2">
+          <span class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Responses Submitted</span>
+          <span class="kpi-big text-success">8</span>
+          <div>
+            <span class="pill bg-success/10 text-success">3 USA · 2 EU · 2 UK · 1 SG</span>
+          </div>
+        </div>
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 p-4 flex flex-col gap-2">
+          <span class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Response Required</span>
+          <span class="kpi-big text-warning">9</span>
+          <div>
+            <span class="pill bg-destructive/10 text-destructive">1 unassigned</span>
+          </div>
+        </div>
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 p-4 flex flex-col gap-2">
+          <span class="text-xs font-medium text-muted-foreground uppercase tracking-wide">2026 Activity Items</span>
+          <span class="kpi-big">403</span>
+          <div>
+            <span class="pill bg-info/10 text-info">Slack + Docs audit</span>
+          </div>
+        </div>
+      </div>
 
-<div class="section-title">&#10003; What we've done</div>
-<div class="grid grid-1" style="padding-top:0;">
-  <div class="card">
-    <div class="explainer">Consultation responses submitted by the policy team.</div>
-    <table>
-      <tr><th>Date</th><th>Consultation</th><th>Market</th><th>Regulator</th><th>Owner</th><th>Response</th></tr>
-      <tr><td>4/30/2026</td><td>OCC NPRM on GENIUS Act implementation — proposed rules for national bank stablec</td><td>USA</td><td>OCC</td><td>Jordan</td><td><a href="https://docs.google.com/document/d/1izNO7ps923MjXDqChWs4txJfjrLPeG87VSQU0zeXC4g/edit" target="_blank">📄 View</a></td></tr>
-<tr><td>05/15/2026</td><td>FDIC consultation on application process for insured depository institutions eng</td><td>USA</td><td>FDIC</td><td>Jordan</td><td><a href="https://docs.google.com/document/d/1FGOnkBYCjw2sNp2AdsDz3XMrFLlE7nPU1v1hViEATBQ/edit?tab=t.0" target="_blank">📄 View</a></td></tr>
-<tr><td>05/15/2026</td><td>MAS Consultation Paper P009-2026 on the Prudential Treatment of Cryptoassets on </td><td>Singapore</td><td>MAS</td><td>Jordan</td><td><a href="https://docs.google.com/document/d/1VXTQu8FhdjG9IiCyRqwuXWdigr-tui5UZcE_o3M0jpo/edit?tab=t.0" target="_blank">📄 View</a></td></tr>
-<tr><td>5/15/2026</td><td>FCA CP26/13 Cryptoasset Perimeter Guidance — consultation on which cryptoasset a</td><td>UK</td><td>FCA</td><td>Jordan</td><td><a href="https://docs.google.com/document/d/1ZIWTGMvANjg0xAL3TpVL8GcPKhJb6AOMMt-YQKUYlRI/edit" target="_blank">📄 View</a></td></tr>
-<tr><td>05/15/2026</td><td>HM Treasury Draft Statutory Instrument amending the Financial Services and Marke</td><td>UK</td><td>HM Treasury</td><td>Jordan</td><td><a href="https://docs.google.com/document/d/1jmwnvL3_ff87TNcCtlJ_kIxPbuuOJcoq3G18byEaalA/edit?tab=t.0" target="_blank">📄 View</a></td></tr>
-<tr><td>5/8/2026</td><td>AMLA Consultation on RTS related to criteria for identifying business relationsh</td><td>EU</td><td>AMLA</td><td>Matthias</td><td><a href="https://docs.google.com/document/d/1rz9vjB12G1wXQ5BYdBQKQEx7JdCxDHFmC1RH2XE9xC8/edit" target="_blank">📄 View</a></td></tr>
+      <!-- ==================== WHAT WE'VE DONE ==================== -->
+      <div>
+        <h2 class="text-lg font-semibold mb-1">✅ What we've done</h2>
+        <p class="text-muted-foreground text-sm mb-4">Consultation responses submitted by the policy team. Each links to the response document.</p>
+      </div>
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="border-b border-border">
+              <tr>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Date</th>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Consultation</th>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Market</th>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Regulator</th>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Owner</th>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Response</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y">
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">15 May</td><td class="px-4 py-3">FCA CP26/13 — Cryptoasset Perimeter Guidance</td><td class="px-4 py-3">UK</td><td class="px-4 py-3">FCA</td><td class="px-4 py-3">Jordan</td><td class="px-4 py-3"><a href="https://docs.google.com/document/d/1ZIWTGMvANjg0xAL3TpVL8GcPKhJb6AOMMt-YQKUYlRI/edit" target="_blank" class="text-primary hover:underline">📄 View</a></td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">15 May</td><td class="px-4 py-3">FDIC — Application Process for Crypto-Asset Activities</td><td class="px-4 py-3">USA</td><td class="px-4 py-3">FDIC</td><td class="px-4 py-3">Jordan</td><td class="px-4 py-3"><a href="https://docs.google.com/document/d/1FGOnkBYCjw2sNp2AdsDz3XMrFLlE7nPU1v1hViEATBQ/edit" target="_blank" class="text-primary hover:underline">📄 View</a></td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">15 May</td><td class="px-4 py-3">HM Treasury — Draft SI Amending Cryptoasset Regulations 2026</td><td class="px-4 py-3">UK</td><td class="px-4 py-3">HM Treasury</td><td class="px-4 py-3">Jordan</td><td class="px-4 py-3"><a href="https://docs.google.com/document/d/1jmwnvL3_ff87TNcCtlJ_kIxPbuuOJcoq3G18byEaalA/edit" target="_blank" class="text-primary hover:underline">📄 View</a></td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">15 May</td><td class="px-4 py-3">MAS P009-2026 — Prudential Treatment of Cryptoassets</td><td class="px-4 py-3">Singapore</td><td class="px-4 py-3">MAS</td><td class="px-4 py-3">Jordan</td><td class="px-4 py-3"><a href="https://docs.google.com/document/d/1VXTQu8FhdjG9IiCyRqwuXWdigr-tui5UZcE_o3M0jpo/edit" target="_blank" class="text-primary hover:underline">📄 View</a></td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">8 May</td><td class="px-4 py-3">AMLA — RTS on Business Relationships and Occasional Transactions</td><td class="px-4 py-3">EU</td><td class="px-4 py-3">AMLA</td><td class="px-4 py-3">Matthias</td><td class="px-4 py-3"><a href="https://docs.google.com/document/d/1rz9vjB12G1wXQ5BYdBQKQEx7JdCxDHFmC1RH2XE9xC8/edit" target="_blank" class="text-primary hover:underline">📄 View</a></td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">8 May</td><td class="px-4 py-3">AMLA — RTS on Customer Due Diligence (CDD) Obligations</td><td class="px-4 py-3">EU</td><td class="px-4 py-3">AMLA</td><td class="px-4 py-3">Matthias</td><td class="px-4 py-3"><a href="https://docs.google.com/document/d/1SeNXJAlL8DrfBhTiWMQJDhWT4UdWX6H7qAUTewORmpo/edit" target="_blank" class="text-primary hover:underline">📄 View</a></td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">30 Apr</td><td class="px-4 py-3">OCC — GENIUS Act Implementation NPRM</td><td class="px-4 py-3">USA</td><td class="px-4 py-3">OCC</td><td class="px-4 py-3">Jordan</td><td class="px-4 py-3"><a href="https://docs.google.com/document/d/1izNO7ps923MjXDqChWs4txJfjrLPeG87VSQU0zeXC4g/edit" target="_blank" class="text-primary hover:underline">📄 View</a></td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">30 Apr</td><td class="px-4 py-3">CFTC — Prediction Markets Regulation</td><td class="px-4 py-3">USA</td><td class="px-4 py-3">CFTC</td><td class="px-4 py-3">Jordan</td><td class="px-4 py-3"><a href="https://docs.google.com/document/d/17ly56VxbtGgouYlLbFD1F5rB6io843YrcBXWOl5-ghA/edit" target="_blank" class="text-primary hover:underline">📄 View</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-    </table>
-  </div>
-</div>
+      <!-- ==================== WHAT NEEDS DOING ==================== -->
+      <div>
+        <h2 class="text-lg font-semibold mb-1">📝 What needs doing</h2>
+        <p class="text-muted-foreground text-sm mb-4">Open or upcoming consultations where Chainalysis should submit a response.</p>
+      </div>
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="border-b border-border">
+              <tr>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Deadline</th>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Consultation</th>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Market</th>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Owner</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y">
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 text-destructive font-semibold">2 Jun</td><td class="px-4 py-3">Treasury — State-level Regime Principles</td><td class="px-4 py-3">USA</td><td class="px-4 py-3"><span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-success/10 text-success">OPEN</span></td><td class="px-4 py-3">Jordan</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 text-destructive font-semibold">5 Jun</td><td class="px-4 py-3">Central Bank of Ireland DP12 — DLT &amp; Tokenisation in Financial Services</td><td class="px-4 py-3">Ireland</td><td class="px-4 py-3"><span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-success/10 text-success">OPEN</span></td><td class="px-4 py-3">Matthias</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 text-destructive font-semibold">9 Jun</td><td class="px-4 py-3">FinCEN — GENIUS Act Implementation NPRM</td><td class="px-4 py-3">USA</td><td class="px-4 py-3"><span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-success/10 text-success">OPEN</span></td><td class="px-4 py-3">Lauren</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 text-destructive font-semibold">9 Jun</td><td class="px-4 py-3">FDIC — GENIUS Act Implementation NPRM</td><td class="px-4 py-3">USA</td><td class="px-4 py-3"><span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-success/10 text-success">OPEN</span></td><td class="px-4 py-3">Jordan</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 text-destructive font-semibold">15 Jun</td><td class="px-4 py-3">SEC — Broker-Dealer Registration / DeFi</td><td class="px-4 py-3">USA</td><td class="px-4 py-3"><span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-success/10 text-success">OPEN</span></td><td class="px-4 py-3">Lauren</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 text-destructive font-semibold">30 Jun</td><td class="px-4 py-3">FinCEN — Modernizing AML Regime NPRM</td><td class="px-4 py-3">USA</td><td class="px-4 py-3"><span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-success/10 text-success">OPEN</span></td><td class="px-4 py-3 text-destructive font-semibold">Unassigned</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 text-warning font-semibold">3 Jul</td><td class="px-4 py-3">FCA &amp; BoE — Future of Tokenisation in UK Wholesale Markets</td><td class="px-4 py-3">UK</td><td class="px-4 py-3"><span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-success/10 text-success">OPEN</span></td><td class="px-4 py-3">Jordan</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 text-warning font-semibold">31 Aug</td><td class="px-4 py-3">EU Commission — MiCA Review Targeted Consultation (DeFi, NFTs, stablecoins)</td><td class="px-4 py-3">EU</td><td class="px-4 py-3"><span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-success/10 text-success">OPEN</span></td><td class="px-4 py-3">Matthias</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 text-muted-foreground">TBD</td><td class="px-4 py-3">FinCEN — DeFi AML Rule Proposal</td><td class="px-4 py-3">USA</td><td class="px-4 py-3"><span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-warning/10 text-warning">UPCOMING</span></td><td class="px-4 py-3"></td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 text-muted-foreground">TBD</td><td class="px-4 py-3">FATF — Privacy Coin Due Diligence Guidance</td><td class="px-4 py-3">Int'l</td><td class="px-4 py-3"><span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-warning/10 text-warning">UPCOMING</span></td><td class="px-4 py-3"></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-<div class="section-title">&#128221; What needs doing</div>
-<div class="grid grid-1" style="padding-top:0;">
-  <div class="card">
-    <div class="explainer">Open or upcoming consultations where Chainalysis should submit a response.</div>
-    <table>
-      <tr><th>Deadline</th><th>Consultation</th><th>Market</th><th>Status</th><th>Owner</th></tr>
-      <tr><td style="color:#f87171;font-weight:600;">May 26</td><td>AMLA consultation on RTS for group-wide AML/CFT requirements — standards for how</td><td>EU</td><td><span class="badge-open">OPEN</span></td><td>Matthias</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">46135</td><td>FinCEN's Notice of Proposed Rulemaking to fundamentally reform financial institu</td><td>USA</td><td><span class="badge-open">OPEN</span></td><td>Jordan</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">46175</td><td>Treasury consultation on principles for state-level crypto regulatory regime — d</td><td>USA</td><td><span class="badge-open">OPEN</span></td><td>Jordan</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">46182</td><td>FinCEN NPRM on GENIUS Act implementation — proposed AML/CFT program requirements</td><td>USA</td><td><span class="badge-open">OPEN</span></td><td>Lauren</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">46182</td><td>FDIC NPRM on GENIUS Act implementation — proposed rules for FDIC-supervised stab</td><td>USA</td><td><span class="badge-open">OPEN</span></td><td>Jordan</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">46188</td><td>SEC consultation on consolidated audit trail requirements for digital asset tran</td><td>USA</td><td><span class="badge-open">OPEN</span></td><td>Lauren</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">46188</td><td>SEC staff statement on broker-dealer registration for DeFi platforms — comment p</td><td>USA</td><td><span class="badge-open">OPEN</span></td><td>Lauren</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">46176</td><td>FCA consultation on final rules and guidance for crypto asset authorisation — co</td><td>UK</td><td><span class="badge-open">OPEN</span></td><td>Jordan</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">5/20/2026</td><td>European Commission Targeted Consultation on the Review of MiCA Regulation — ass</td><td>EU</td><td><span class="badge-open">OPEN</span></td><td>Matthias</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">46188</td><td>Comment period closes on CVM crypto securities framework establishing when crypt</td><td>Brazil</td><td><span class="badge-upcoming">UPCOMING</span></td><td>Jordan</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">46203</td><td>Government response expected to Treasury token mapping consultation on regulator</td><td>Australia</td><td><span class="badge-upcoming">UPCOMING</span></td><td>Jordan</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">3/5/2026</td><td>Central Bank of Ireland Discussion Paper DP12 — Distributed Ledger Technology (D</td><td>EU</td><td><span class="badge-open">OPEN</span></td><td>Matthias</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">5/25/2026</td><td>ESMA/EBA Joint Consultation on revised Suitability Assessment Guidelines for man</td><td>EU</td><td><span class="badge-open">OPEN</span></td><td>Matthias</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">7/6/2026</td><td>European Commission consultation on EU Anti-Corruption Strategy — includes harmo</td><td>EU</td><td><span class="badge-open">OPEN</span></td><td>Matthias</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">H1 26</td><td>Australian Treasury Tranche 1 Package of Payments Licensing Legislation — consul</td><td>Australia</td><td><span class="badge-open">OPEN</span></td><td>Jordan</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">2026</td><td>OSFI industry engagement on risk weightings for Group 2a crypto-assets (tokenise</td><td>Canada</td><td><span class="badge-open">OPEN</span></td><td style="color:#f87171;">Unassigned</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">H2 26</td><td>FCA planned update to the Financial Crime Guide to include crypto-specific AML r</td><td>UK</td><td><span class="badge-upcoming">UPCOMING</span></td><td>Jordan</td></tr>
-<tr><td style="color:#f87171;font-weight:600;">5/18/2026</td><td>FCA & Bank of England Joint Call for Input — The Future of Tokenisation in UK Wh</td><td>UK</td><td><span class="badge-open">OPEN</span></td><td>Jordan</td></tr>
+      <hr />
 
-    </table>
-  </div>
-</div>
+      <!-- ==================== KEY MESSAGING THEMES ==================== -->
+      <div>
+        <h2 class="text-lg font-semibold mb-1">📌 Our key messaging themes</h2>
+        <p class="text-muted-foreground text-sm mb-4">Consistent positions reinforced across all consultation responses.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 p-4 flex flex-col gap-2">
+          <h3 class="text-sm font-semibold">Blockchain Transparency as a Regulatory Asset</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">Public blockchains provide unique transparency — immutable records, real-time visibility, permanent audit trails — that should be leveraged as a core compliance capability.</p>
+          <div class="flex flex-wrap gap-1">
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-info/10 text-info">CFTC</span>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-info/10 text-info">OCC</span>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-info/10 text-info">AMLA CDD</span>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-info/10 text-info">AMLA BR</span>
+          </div>
+          <div class="theme-quote text-muted-foreground">"Every on-chain transaction creates a permanent, publicly auditable record" — CFTC Response</div>
+        </div>
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 p-4 flex flex-col gap-2">
+          <h3 class="text-sm font-semibold">Blockchain Analytics as Mandatory Compliance Infrastructure</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">Blockchain analytics should be required — not optional — across all regulated entities as a baseline compliance capability, with specific requirements for real-time monitoring and cross-chain visibility.</p>
+          <div class="flex flex-wrap gap-1">
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-info/10 text-info">OCC</span>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-info/10 text-info">AMLA CDD</span>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-info/10 text-info">AMLA BR</span>
+          </div>
+          <div class="theme-quote text-muted-foreground">"Require blockchain analytics as a compliance capability for all PPSIs" — OCC Response</div>
+        </div>
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 p-4 flex flex-col gap-2">
+          <h3 class="text-sm font-semibold">Technology Neutrality with Quality Standards</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">Regulations should remain technology-neutral on implementation while establishing clear, objective quality and reliability standards. We advocate for a tiered data quality framework distinguishing forensic-grade outputs from heuristic-based analysis.</p>
+          <div class="flex flex-wrap gap-1">
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-info/10 text-info">OCC</span>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-info/10 text-info">AMLA CDD</span>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-info/10 text-info">AMLA BR</span>
+          </div>
+          <div class="theme-quote text-muted-foreground">"The RTS need not prescribe specific technologies... they should clarify quality expectations" — AMLA CDD Response</div>
+        </div>
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 p-4 flex flex-col gap-2">
+          <h3 class="text-sm font-semibold">Regulatory Harmonisation Across Jurisdictions</h3>
+          <p class="text-xs text-muted-foreground leading-relaxed">Regulators should establish consistent, harmonised blockchain analytics standards across agencies and jurisdictions to prevent divergent interpretations and create a unified compliance baseline.</p>
+          <div class="flex flex-wrap gap-1">
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-info/10 text-info">OCC</span>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-info/10 text-info">AMLA CDD</span>
+          </div>
+          <div class="theme-quote text-muted-foreground">"Coordinate with FDIC and Federal Reserve to develop harmonized blockchain analytics requirements" — OCC Response</div>
+        </div>
+      </div>
 
-<div class="section-title">&#127908; Events &amp; Speaking</div>
-<div class="grid grid-1" style="padding-top:0;">
-  <div class="card">
-    <div class="explainer">Conferences, summits, and speaking engagements the team is attending or considering.</div>
-    <table>
-      <tr><th>Date</th><th>Event</th><th>Location</th><th>Type</th><th>Who</th><th>Status</th></tr>
-      <tr><td>Nov 26</td><td>Singapore FinTech Festival</td><td>Singapore</td><td>🎤 Speaking</td><td>Jordan</td><td><span class="badge-upcoming">Considering</span></td></tr>
-<tr><td>10 Jun</td><td>RUSI Brussels — speaking engagement</td><td>Belgium</td><td>🎤 Speaking</td><td>Jordan</td><td><span class="badge-open">Confirmed</span></td></tr>
+      <hr />
 
-    </table>
-  </div>
-</div>
+      <!-- ==================== COVERAGE BY STRATEGIC PRIORITY ==================== -->
+      <div>
+        <h2 class="text-lg font-semibold mb-1">🎯 Coverage by Strategic Priority</h2>
+        <p class="text-muted-foreground text-sm mb-4">Refined to align with internal workload metrics. Includes audit-derived activity counts alongside tracker items.</p>
+      </div>
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="border-b border-border">
+              <tr>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Priority</th>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Level</th>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Posture</th>
+                <th class="px-4 py-3 text-right font-medium text-muted-foreground">Tracked</th>
+                <th class="px-4 py-3 text-right font-medium text-muted-foreground">Open</th>
+                <th class="px-4 py-3 text-right font-medium text-muted-foreground">Responded</th>
+                <th class="px-4 py-3 text-right font-medium text-muted-foreground">Audit Activity</th>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Coverage</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y">
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Crypto &amp; Stablecoin Legislation</td><td class="px-4 py-3"><span class="badge-p1 bg-destructive/10 text-destructive">P1</span></td><td class="px-4 py-3 text-muted-foreground">Key priority</td><td class="px-4 py-3 text-right">108</td><td class="px-4 py-3 text-right">8</td><td class="px-4 py-3 text-right">3</td><td class="px-4 py-3 text-right">~91</td><td class="px-4 py-3 text-success">🟢 Strong</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">AML/CFT &amp; Travel Rule</td><td class="px-4 py-3"><span class="badge-p1 bg-destructive/10 text-destructive">P1</span></td><td class="px-4 py-3 text-muted-foreground">Key priority</td><td class="px-4 py-3 text-right">64</td><td class="px-4 py-3 text-right">4</td><td class="px-4 py-3 text-right">2</td><td class="px-4 py-3 text-right">~64</td><td class="px-4 py-3 text-success">🟢 Strong</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Fraud &amp; Scams</td><td class="px-4 py-3"><span class="badge-p1 bg-destructive/10 text-destructive">P1</span></td><td class="px-4 py-3 text-muted-foreground">Key priority</td><td class="px-4 py-3 text-right">18</td><td class="px-4 py-3 text-right">1</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">~8</td><td class="px-4 py-3 text-warning">🟡 Moderate</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">AI &amp; Explainability</td><td class="px-4 py-3"><span class="badge-p1 bg-destructive/10 text-destructive">P1</span></td><td class="px-4 py-3 text-muted-foreground">Key priority</td><td class="px-4 py-3 text-right">8</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">~5</td><td class="px-4 py-3 text-warning">🟡 Light</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Data Quality &amp; Standards</td><td class="px-4 py-3"><span class="badge-p1 bg-destructive/10 text-destructive">P1</span></td><td class="px-4 py-3 text-muted-foreground">Key priority</td><td class="px-4 py-3 text-right">2</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">~39</td><td class="px-4 py-3 text-muted-foreground">⚪ Internal work</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Economic Warfare</td><td class="px-4 py-3"><span class="badge-p1 bg-destructive/10 text-destructive">P1</span></td><td class="px-4 py-3 text-muted-foreground">Key priority</td><td class="px-4 py-3 text-right">6</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">~3</td><td class="px-4 py-3 text-warning">🟡 Emerging</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Cybersecurity (NIS2/DORA)</td><td class="px-4 py-3"><span class="badge-p2 bg-warning/10 text-warning">P2</span></td><td class="px-4 py-3 text-muted-foreground">Secondary</td><td class="px-4 py-3 text-right">14</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">~6</td><td class="px-4 py-3 text-success">🟢 Monitoring</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Prediction Markets</td><td class="px-4 py-3"><span class="badge-p2 bg-warning/10 text-warning">P2</span></td><td class="px-4 py-3 text-muted-foreground">Secondary</td><td class="px-4 py-3 text-right">2</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">1</td><td class="px-4 py-3 text-right">~4</td><td class="px-4 py-3 text-success">🟢 CFTC done</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Tax (CARF/DAC8/1099-DA)</td><td class="px-4 py-3"><span class="badge-p3 bg-muted text-muted-foreground">P3</span></td><td class="px-4 py-3 text-muted-foreground">Watching brief</td><td class="px-4 py-3 text-right">10</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">~5</td><td class="px-4 py-3 text-muted-foreground">⚪ As intended</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">DeFi</td><td class="px-4 py-3"><span class="badge-p3 bg-muted text-muted-foreground">P3</span></td><td class="px-4 py-3 text-muted-foreground">Watching brief</td><td class="px-4 py-3 text-right">5</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">~3</td><td class="px-4 py-3 text-muted-foreground">⚪ MiCA will force</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="px-4 pt-3">
+          <p class="text-xs text-muted-foreground"><strong>Audit Activity</strong> = total docs, messages, and artefacts identified in the comprehensive Slack + Confluence/Drive audit. Shows true team effort beyond the tracker's regulatory item count. <strong>Coverage</strong> now reflects both external engagement and internal workload alignment.</p>
+        </div>
+      </div>
 
-<div class="section-title">&#128202; Coverage by strategic priority</div>
-<div class="grid grid-1" style="padding-top:0;">
-  <div class="card">
-    <table>
-      <tr><th>Priority</th><th>Level</th><th>Items</th><th>Open</th><th>Responded</th><th>Coverage</th></tr>
-      <tr><td>Crypto & Stablecoin</td><td><span class="priority-badge badge-p1">P1</span></td><td>2</td><td>0</td><td>0</td><td style="color:#94a3b8;">⚪ Light</td></tr>
-<tr><td>AML/CFT & Travel Rule</td><td><span class="priority-badge badge-p1">P1</span></td><td>1</td><td>0</td><td>0</td><td style="color:#94a3b8;">⚪ Light</td></tr>
-<tr><td>AI</td><td><span class="priority-badge badge-p1">P1</span></td><td>4</td><td>0</td><td>0</td><td style="color:#94a3b8;">⚪ Light</td></tr>
-<tr><td>Data Quality & Standards</td><td><span class="priority-badge badge-p1">P1</span></td><td>0</td><td>0</td><td>0</td><td style="color:#94a3b8;">Internal work</td></tr>
-<tr><td>Cybersecurity</td><td><span class="priority-badge badge-p2">P2</span></td><td>3</td><td>0</td><td>0</td><td style="color:#94a3b8;">⚪ Light</td></tr>
-<tr><td>General</td><td><span class="priority-badge badge-p2">P3</span></td><td>1</td><td>0</td><td>0</td><td style="color:#94a3b8;">⚪ Light</td></tr>
+      <hr />
 
-    </table>
-  </div>
-</div>
+      <!-- ==================== 2026 ACTIVITY AUDIT ==================== -->
+      <div>
+        <h2 class="text-lg font-semibold mb-1">📊 2026 Activity Audit</h2>
+        <p class="text-muted-foreground text-sm mb-4">Combined analysis of 443 Slack messages + 285 Google Drive/Confluence documents. Reveals the full scope of the team's work beyond what's visible in any single channel.</p>
+      </div>
 
-<div style="padding:40px; text-align:center; color:#4a4d5e; font-size:12px;">
-  Chainalysis Policy Team &middot;
-  <a href="https://docs.google.com/spreadsheets/d/1lMeoK00KfXdCRo59n-0Y21jfbhZIcb-3s46uwvBFT5g/edit" style="color:#6b6f83;">Full Tracker</a>
-</div>
+      <!-- Charts -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 flex flex-col gap-4 py-4">
+          <div class="px-4">
+            <h3 class="text-base font-medium">Activity by Category</h3>
+            <p class="text-muted-foreground text-xs">403 total activity items across 10 categories</p>
+          </div>
+          <div class="px-4 chart-container" style="height: 320px;">
+            <canvas id="activityChart"></canvas>
+          </div>
+        </div>
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 flex flex-col gap-4 py-4">
+          <div class="px-4">
+            <h3 class="text-base font-medium">Where the Work Lives</h3>
+            <p class="text-muted-foreground text-xs">Slack messages vs Docs/Confluence — most work is invisible in Slack</p>
+          </div>
+          <div class="px-4 chart-container" style="height: 320px;">
+            <canvas id="sourceChart"></canvas>
+          </div>
+        </div>
+      </div>
 
-</body>
+      <!-- Combined Picture Summary Table -->
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <div class="px-4 mb-3">
+          <h3 class="text-base font-medium">Combined Picture</h3>
+          <p class="text-muted-foreground text-xs">Breakdown of all 403 activity items by source and category</p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="border-b border-border">
+              <tr>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Activity</th>
+                <th class="px-4 py-3 text-right font-medium text-muted-foreground">Slack</th>
+                <th class="px-4 py-3 text-right font-medium text-muted-foreground">Docs / Confluence</th>
+                <th class="px-4 py-3 text-right font-medium text-muted-foreground">Total</th>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Notes</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y">
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">💼 Customer &amp; Sales Support</td><td class="px-4 py-3 text-right">62</td><td class="px-4 py-3 text-right">30</td><td class="px-4 py-3 text-right font-semibold">92</td><td class="px-4 py-3 text-muted-foreground">Split — Slack for requests, Docs for materials</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">📋 Consultation Responses</td><td class="px-4 py-3 text-right">15</td><td class="px-4 py-3 text-right">76</td><td class="px-4 py-3 text-right font-semibold">91</td><td class="px-4 py-3 text-muted-foreground">Core work — mostly lives in Confluence, not Slack</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">📝 Content &amp; Blog</td><td class="px-4 py-3 text-right">2</td><td class="px-4 py-3 text-right">71</td><td class="px-4 py-3 text-right font-semibold">73</td><td class="px-4 py-3 text-destructive">Almost entirely invisible in Slack</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">📊 Briefings &amp; Presentations</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">44</td><td class="px-4 py-3 text-right font-semibold">44</td><td class="px-4 py-3 text-destructive">Not discussed in Slack at all</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">🎯 Position Papers &amp; Strategy</td><td class="px-4 py-3 text-right">12</td><td class="px-4 py-3 text-right">27</td><td class="px-4 py-3 text-right font-semibold">39</td><td class="px-4 py-3 text-muted-foreground">Strategic docs mostly in Confluence</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">🎤 Events &amp; Speaking</td><td class="px-4 py-3 text-right">21</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right font-semibold">21</td><td class="px-4 py-3 text-muted-foreground">Lives in Slack only</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">📈 Research &amp; Analysis</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">16</td><td class="px-4 py-3 text-right font-semibold">16</td><td class="px-4 py-3 text-muted-foreground">Entirely in docs</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">🏗️ Internal Planning</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right">10</td><td class="px-4 py-3 text-right font-semibold">10</td><td class="px-4 py-3 text-muted-foreground">Confluence only</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">🔧 Product Input</td><td class="px-4 py-3 text-right">9</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right font-semibold">9</td><td class="px-4 py-3 text-warning">⚠️ Still underweight</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3">📰 Media &amp; Press</td><td class="px-4 py-3 text-right">8</td><td class="px-4 py-3 text-right">0</td><td class="px-4 py-3 text-right font-semibold">8</td><td class="px-4 py-3 text-muted-foreground">Slack-based coordination</td></tr>
+            </tbody>
+            <tfoot class="border-t border-border">
+              <tr><td class="px-4 py-3 font-semibold">Total</td><td class="px-4 py-3 text-right font-semibold">129</td><td class="px-4 py-3 text-right font-semibold">274</td><td class="px-4 py-3 text-right font-semibold">403</td><td class="px-4 py-3 text-muted-foreground">68% of work invisible in Slack</td></tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Insight Callouts -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 p-4">
+          <div class="insight-callout bg-warning/10" style="border-color: var(--warning);">
+            <p class="text-sm font-semibold">Content is Hidden</p>
+            <p class="text-xs text-muted-foreground mt-1">Only 2 content items visible in Slack, but <strong>71 content docs</strong> found in Confluence/Drive. The team's content review workload is real but invisible.</p>
+          </div>
+        </div>
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 p-4">
+          <div class="insight-callout bg-info/10" style="border-color: var(--info);">
+            <p class="text-sm font-semibold">FCA Workbench Initiative</p>
+            <p class="text-xs text-muted-foreground mt-1">A full UK Firm Authorisation Workbench (10+ deliverables) exists outside the tracker — a major product/consulting asset for the Sep 2026 FCA gateway.</p>
+          </div>
+        </div>
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 p-4">
+          <div class="insight-callout bg-destructive/10" style="border-color: var(--destructive);">
+            <p class="text-sm font-semibold">Product Input Gap</p>
+            <p class="text-xs text-muted-foreground mt-1">Only <strong>9 items</strong> (2%) across all channels. The regulatory → product pipeline needs strengthening. Policy should be the primary source of product requirements.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Workload Charts -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 flex flex-col gap-4 py-4">
+          <div class="px-4">
+            <h3 class="text-base font-medium">Workload Distribution</h3>
+            <p class="text-muted-foreground text-xs">Tracker items assigned per team member</p>
+          </div>
+          <div class="px-4 chart-container" style="height: 240px;">
+            <canvas id="workloadChart"></canvas>
+          </div>
+        </div>
+        <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 flex flex-col gap-4 py-4">
+          <div class="px-4">
+            <h3 class="text-base font-medium">Response Output</h3>
+            <p class="text-muted-foreground text-xs">Consultation responses submitted by team member (Q2 2026)</p>
+          </div>
+          <div class="px-4 chart-container" style="height: 240px;">
+            <canvas id="responseChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <!-- ==================== DETAILED CATEGORY BREAKDOWN ==================== -->
+      <div>
+        <h2 class="text-lg font-semibold mb-1">🔍 Activity Detail by Category</h2>
+        <p class="text-muted-foreground text-sm mb-4">Expand each category to see the specific items, channels, key people, and documents identified in the audit.</p>
+      </div>
+
+      <!-- 1. Customer & Sales Support -->
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <details>
+          <summary class="px-4 py-2 flex items-center justify-between hover:bg-muted transition-colors rounded-xl">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">💼</span>
+              <div>
+                <span class="text-sm font-semibold">Customer &amp; Sales Support</span>
+                <span class="text-xs text-muted-foreground ml-2">92 items (62 Slack · 30 Docs)</span>
+              </div>
+            </div>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-warning/10 text-warning">Untracked</span>
+          </summary>
+          <div class="px-4 pt-3 space-y-3">
+            <p class="text-xs text-muted-foreground leading-relaxed">Regulatory positioning for deals, compliance framework explanations for prospects, market-specific regulatory landscape briefings. Ad-hoc requests from GTM teams across all regions.</p>
+            <div>
+              <p class="text-xs font-medium mb-1">Top Slack channels</p>
+              <div class="flex flex-wrap gap-1">
+                <span class="cat-channel bg-muted text-muted-foreground">#nemea-gtm (23)</span>
+                <span class="cat-channel bg-muted text-muted-foreground">#anz_team (9)</span>
+                <span class="cat-channel bg-muted text-muted-foreground">#gtm-global-revenue (7)</span>
+                <span class="cat-channel bg-muted text-muted-foreground">#proof_of_sales_wins (7)</span>
+                <span class="cat-channel bg-muted text-muted-foreground">#uki-gtm (4)</span>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-medium mb-1">Top requesters</p>
+              <div class="flex flex-wrap gap-1">
+                <span class="cat-channel bg-info/10 text-info">Matthias (NEMEA)</span>
+                <span class="cat-channel bg-info/10 text-info">Jed Sibley</span>
+                <span class="cat-channel bg-info/10 text-info">Ricky Siewers</span>
+                <span class="cat-channel bg-info/10 text-info">Mike Meisels (ANZ)</span>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-medium mb-1">Docs / Confluence (30 items)</p>
+              <p class="text-xs text-muted-foreground">FAQs, compliance workflow guides, DDQ responses, privacy reviews, market-specific regulatory landscape briefing decks, customer-facing onboarding materials.</p>
+            </div>
+            <div class="insight-callout bg-warning/10" style="border-color: var(--warning);">
+              <p class="text-xs text-muted-foreground"><strong>Recommendation:</strong> Consider a monthly "regulatory landscape" briefing per region rather than ad-hoc Slack responses. This service layer is substantial but entirely untracked.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- 2. Consultation Responses -->
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <details>
+          <summary class="px-4 py-2 flex items-center justify-between hover:bg-muted transition-colors rounded-xl">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">📋</span>
+              <div>
+                <span class="text-sm font-semibold">Consultation Responses</span>
+                <span class="text-xs text-muted-foreground ml-2">91 items (15 Slack · 76 Docs)</span>
+              </div>
+            </div>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-success/10 text-success">Core work</span>
+          </summary>
+          <div class="px-4 pt-3 space-y-3">
+            <p class="text-xs text-muted-foreground leading-relaxed">Core policy work — engaging with regulators and producing consultation responses. The bulk lives in Confluence (drafts, reviews, final versions), with only coordination visible in Slack.</p>
+            <div>
+              <p class="text-xs font-medium mb-1">8 responses submitted (Jordan: 6, Matthias: 2)</p>
+              <div class="space-y-1">
+                <div class="cat-detail-item text-muted-foreground">CFTC — Prediction Markets Regulation <span class="pill bg-info/10 text-info">USA</span></div>
+                <div class="cat-detail-item text-muted-foreground">OCC — GENIUS Act Implementation NPRM <span class="pill bg-info/10 text-info">USA</span></div>
+                <div class="cat-detail-item text-muted-foreground">FDIC — Application Process for Crypto-Asset Activities <span class="pill bg-info/10 text-info">USA</span></div>
+                <div class="cat-detail-item text-muted-foreground">FCA CP26/13 — Cryptoasset Perimeter Guidance <span class="pill bg-info/10 text-info">UK</span></div>
+                <div class="cat-detail-item text-muted-foreground">HM Treasury — Draft SI Amending Cryptoasset Regulations 2026 <span class="pill bg-info/10 text-info">UK</span></div>
+                <div class="cat-detail-item text-muted-foreground">MAS P009-2026 — Prudential Treatment of Cryptoassets <span class="pill bg-info/10 text-info">SG</span></div>
+                <div class="cat-detail-item text-muted-foreground">AMLA — RTS on Customer Due Diligence Obligations <span class="pill bg-info/10 text-info">EU</span></div>
+                <div class="cat-detail-item text-muted-foreground">AMLA — RTS on Business Relationships &amp; Occasional Transactions <span class="pill bg-info/10 text-info">EU</span></div>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-medium mb-1">Slack activity samples</p>
+              <div class="space-y-1">
+                <div class="cat-detail-item text-muted-foreground"><span class="text-xs">2026-05-26</span> — DORA compliance verification question (#help-grc, Ray Chia)</div>
+                <div class="cat-detail-item text-muted-foreground"><span class="text-xs">2026-05-21</span> — Generating consultation response, OCC style (#help-chainalysis-agents, Jordan)</div>
+                <div class="cat-detail-item text-muted-foreground"><span class="text-xs">2026-04-17</span> — FCA engagement (#fca-growth-uk, Rob Elphick)</div>
+                <div class="cat-detail-item text-muted-foreground"><span class="text-xs">2025-11-12</span> — Regulatory Update: FCA CP25/25 (#nemea-gtm, Paul Taylor)</div>
+                <div class="cat-detail-item text-muted-foreground"><span class="text-xs">2025-02-24</span> — Wyoming RFP — policy SME involvement (#wyoming-rfp, Tim Plunkett)</div>
+                <div class="cat-detail-item text-muted-foreground"><span class="text-xs">2024-10-08</span> — MiCA retail protection / market integrity (#gtmemea, Matthias)</div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- 3. Content & Blog -->
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <details>
+          <summary class="px-4 py-2 flex items-center justify-between hover:bg-muted transition-colors rounded-xl">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">📝</span>
+              <div>
+                <span class="text-sm font-semibold">Content &amp; Blog Review</span>
+                <span class="text-xs text-muted-foreground ml-2">73 items (2 Slack · 71 Docs)</span>
+              </div>
+            </div>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-destructive/10 text-destructive">Hidden workload</span>
+          </summary>
+          <div class="px-4 pt-3 space-y-3">
+            <p class="text-xs text-muted-foreground leading-relaxed">Almost entirely invisible in Slack — the Slack analysis showed only 2 messages, but the Confluence/Drive search found 71 content and blog-related documents. This is the clearest evidence of hidden policy team workload.</p>
+            <div>
+              <p class="text-xs font-medium mb-1">What this includes (71 Docs/Confluence items)</p>
+              <p class="text-xs text-muted-foreground">Blog post drafts reviewed by policy team, thought leadership articles with regulatory framing, content calendar contributions, marketing collateral with compliance/regulatory claims reviewed for accuracy, external publication drafts.</p>
+            </div>
+            <div>
+              <p class="text-xs font-medium mb-1">Slack evidence</p>
+              <div class="space-y-1">
+                <div class="cat-detail-item text-muted-foreground">Francesca Mormanni (5 messages in #ask-marketing) — content review requests</div>
+                <div class="cat-detail-item text-muted-foreground">Avril Sindhu Anbarasu (5 messages) — APAC content coordination</div>
+              </div>
+            </div>
+            <div class="insight-callout bg-warning/10" style="border-color: var(--warning);">
+              <p class="text-xs text-muted-foreground"><strong>Recommendation:</strong> Route content review through #ask-marketing with structured intake to make this workload visible and manageable.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- 4. Briefings & Presentations -->
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <details>
+          <summary class="px-4 py-2 flex items-center justify-between hover:bg-muted transition-colors rounded-xl">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">📊</span>
+              <div>
+                <span class="text-sm font-semibold">Briefings &amp; Presentations</span>
+                <span class="text-xs text-muted-foreground ml-2">44 items (0 Slack · 44 Docs)</span>
+              </div>
+            </div>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-destructive/10 text-destructive">Zero Slack visibility</span>
+          </summary>
+          <div class="px-4 pt-3 space-y-3">
+            <p class="text-xs text-muted-foreground leading-relaxed">Not discussed in Slack at all — entirely lives in Docs/Confluence. These are prepared materials delivered to internal and external stakeholders.</p>
+            <div>
+              <p class="text-xs font-medium mb-1">Key items identified</p>
+              <div class="space-y-1">
+                <div class="cat-detail-item text-muted-foreground">Data presentation frameworks — tailored for central banks</div>
+                <div class="cat-detail-item text-muted-foreground">Data presentation frameworks — tailored for general regulators</div>
+                <div class="cat-detail-item text-muted-foreground">HK &amp; Singapore regulatory analysis — stablecoin and VASP focus</div>
+                <div class="cat-detail-item text-muted-foreground">Senate market structure analysis — Senate Ag vs Banking comparison</div>
+                <div class="cat-detail-item text-muted-foreground">Stablecoin issuer messaging — positioning and requirements framework</div>
+                <div class="cat-detail-item text-muted-foreground">UK Policing overhaul analysis — regulatory implications</div>
+                <div class="cat-detail-item text-muted-foreground">Mid-2025 Policy Review — comprehensive review document</div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- 5. Position Papers & Strategy -->
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <details>
+          <summary class="px-4 py-2 flex items-center justify-between hover:bg-muted transition-colors rounded-xl">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">🎯</span>
+              <div>
+                <span class="text-sm font-semibold">Position Papers &amp; Strategy</span>
+                <span class="text-xs text-muted-foreground ml-2">39 items (12 Slack · 27 Docs)</span>
+              </div>
+            </div>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-info/10 text-info">Intellectual capital</span>
+          </summary>
+          <div class="px-4 pt-3 space-y-3">
+            <p class="text-xs text-muted-foreground leading-relaxed">The team's strategic documents and positioning work. Strategic docs mostly in Confluence, with some alignment conversations in Slack DMs.</p>
+            <div>
+              <p class="text-xs font-medium mb-1">Confluence docs identified (27 items)</p>
+              <div class="space-y-1">
+                <div class="cat-detail-item text-muted-foreground">Priority Countries and Regulators — strategy document</div>
+                <div class="cat-detail-item text-muted-foreground">Market abuse monitoring paper — for virtual assets</div>
+                <div class="cat-detail-item text-muted-foreground">Stablecoin recommendations for CIOs (Sep 2025)</div>
+                <div class="cat-detail-item text-muted-foreground">Polymarket competitive positioning (Feb 2026)</div>
+                <div class="cat-detail-item text-muted-foreground">FCA Application Workbench — programme map, deep-dive v6.0, MVP scope, Phase 0 build inventory, perimeter pre-check, Streamlit app notes, video walkthrough script, one-pager, productisation levels framework, wallet geo signals opportunities</div>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-medium mb-1">Slack strategic discussions (12 items)</p>
+              <p class="text-xs text-muted-foreground">Group DMs with Maddie, Caitlin Barnett, Liana Rizzi, Matthias, Eric Jardine, Avril Sindhu — strategic alignment conversations. Also Polymarket competitive positioning.</p>
+            </div>
+            <div class="insight-callout bg-info/10" style="border-color: var(--info);">
+              <p class="text-xs text-muted-foreground"><strong>Note:</strong> The FCA Workbench alone (10+ deliverables) is a major product/consulting asset not visible in the tracker. Should be added as a tracked initiative for the Sep 2026 FCA gateway opening.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- 6. Events & Speaking -->
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <details>
+          <summary class="px-4 py-2 flex items-center justify-between hover:bg-muted transition-colors rounded-xl">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">🎤</span>
+              <div>
+                <span class="text-sm font-semibold">Events &amp; Speaking</span>
+                <span class="text-xs text-muted-foreground ml-2">21 items (21 Slack · 0 Docs)</span>
+              </div>
+            </div>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-muted text-muted-foreground">Slack only</span>
+          </summary>
+          <div class="px-4 pt-3 space-y-3">
+            <p class="text-xs text-muted-foreground leading-relaxed">Conference panels, webinars, speaking opportunities. Lives entirely in Slack — no supporting documents found in Confluence/Drive.</p>
+            <div>
+              <p class="text-xs font-medium mb-1">Key events visible</p>
+              <div class="space-y-1">
+                <div class="cat-detail-item text-muted-foreground">Stablecoin panel (Jan 2025)</div>
+                <div class="cat-detail-item text-muted-foreground">UNODC collaboration (Jun 2025)</div>
+                <div class="cat-detail-item text-muted-foreground">Sub-Saharan Africa webinars / Nodes events</div>
+                <div class="cat-detail-item text-muted-foreground">Cyprus broker webinar (Sep 2025)</div>
+                <div class="cat-detail-item text-muted-foreground">Chainalysis agents webinars (2026)</div>
+                <div class="cat-detail-item text-muted-foreground">Multiple external conference speaking opportunities</div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- 7. Research & Analysis -->
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <details>
+          <summary class="px-4 py-2 flex items-center justify-between hover:bg-muted transition-colors rounded-xl">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">📈</span>
+              <div>
+                <span class="text-sm font-semibold">Research &amp; Analysis</span>
+                <span class="text-xs text-muted-foreground ml-2">16 items (0 Slack · 16 Docs)</span>
+              </div>
+            </div>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-muted text-muted-foreground">Docs only</span>
+          </summary>
+          <div class="px-4 pt-3 space-y-3">
+            <p class="text-xs text-muted-foreground leading-relaxed">Entirely in docs. Research output is concentrated around key regulatory moments and competitive analysis.</p>
+            <div>
+              <p class="text-xs font-medium mb-1">Key items identified</p>
+              <div class="space-y-1">
+                <div class="cat-detail-item text-muted-foreground">Polymarket × Chainalysis analysis (Feb 2026)</div>
+                <div class="cat-detail-item text-muted-foreground">Senate market structure comparison — Ag vs Banking (Jan 2026)</div>
+                <div class="cat-detail-item text-muted-foreground">Stablecoin recommendations for CIOs (Sep 2025)</div>
+                <div class="cat-detail-item text-muted-foreground">Risk assessments and policy analyses</div>
+                <div class="cat-detail-item text-muted-foreground">Regulatory impact assessments for key jurisdictions</div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- 8. Internal Planning -->
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <details>
+          <summary class="px-4 py-2 flex items-center justify-between hover:bg-muted transition-colors rounded-xl">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">🏗️</span>
+              <div>
+                <span class="text-sm font-semibold">Internal Planning</span>
+                <span class="text-xs text-muted-foreground ml-2">10 items (0 Slack · 10 Docs)</span>
+              </div>
+            </div>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-muted text-muted-foreground">Confluence only</span>
+          </summary>
+          <div class="px-4 pt-3 space-y-3">
+            <p class="text-xs text-muted-foreground leading-relaxed">Confluence only — internal planning documents for team operations, roadmaps, and priority setting.</p>
+            <div>
+              <p class="text-xs font-medium mb-1">Items include</p>
+              <p class="text-xs text-muted-foreground">Team OKR tracking, priority planning docs, H2 2026 roadmap drafts, resource planning notes, taxonomy project management (gating AI + Data Quality priorities).</p>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- 9. Product Input -->
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <details>
+          <summary class="px-4 py-2 flex items-center justify-between hover:bg-muted transition-colors rounded-xl">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">🔧</span>
+              <div>
+                <span class="text-sm font-semibold">Product Input</span>
+                <span class="text-xs text-muted-foreground ml-2">9 items (9 Slack · 0 Docs)</span>
+              </div>
+            </div>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-destructive/10 text-destructive">⚠️ Underweight</span>
+          </summary>
+          <div class="px-4 pt-3 space-y-3">
+            <p class="text-xs text-muted-foreground leading-relaxed">At 2% of all activity, this is significantly underweight given that policy should be the primary source of regulatory requirements for product. Low volume but important — all 9 items are Slack-based, no supporting documents in Confluence/Drive.</p>
+            <div>
+              <p class="text-xs font-medium mb-1">Channels</p>
+              <div class="flex flex-wrap gap-1">
+                <span class="cat-channel bg-muted text-muted-foreground">#compliance-products-group</span>
+                <span class="cat-channel bg-muted text-muted-foreground">#ask-product</span>
+                <span class="cat-channel bg-muted text-muted-foreground">#product-launch</span>
+                <span class="cat-channel bg-muted text-muted-foreground">#product-feedback</span>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-medium mb-1">Key contact</p>
+              <p class="text-xs text-muted-foreground">Sean Zhu (4 messages) — AI/tech regulatory, product discussions. Compliance product features, regulatory requirements for KYT/Reactor.</p>
+            </div>
+            <div class="insight-callout bg-destructive/10" style="border-color: var(--destructive);">
+              <p class="text-xs text-muted-foreground"><strong>Recommendation:</strong> Establish a dedicated channel or regular cadence for policy → product requirements. 9 messages in 2 years is too low. Policy insights should feed into product roadmap systematically.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- 10. Media & Press -->
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <details>
+          <summary class="px-4 py-2 flex items-center justify-between hover:bg-muted transition-colors rounded-xl">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">📰</span>
+              <div>
+                <span class="text-sm font-semibold">Media &amp; Press</span>
+                <span class="text-xs text-muted-foreground ml-2">8 items (8 Slack · 0 Docs)</span>
+              </div>
+            </div>
+            <span class="inline-flex h-5 items-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium bg-muted text-muted-foreground">Reactive</span>
+          </summary>
+          <div class="px-4 pt-3 space-y-3">
+            <p class="text-xs text-muted-foreground leading-relaxed">Press queries, media statements, journalist interactions. Entirely Slack-based coordination with comms team.</p>
+            <div>
+              <p class="text-xs font-medium mb-1">Channels</p>
+              <div class="flex flex-wrap gap-1">
+                <span class="cat-channel bg-muted text-muted-foreground">#shr-chainalysis-media</span>
+                <span class="cat-channel bg-muted text-muted-foreground">#japan-comms-marketing</span>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-medium mb-1">Key contacts</p>
+              <p class="text-xs text-muted-foreground">Madeleine Kennedy (4 messages — press statements, media). Providing quotes, reviewing press statements, supporting media team on regulatory narratives (GENIUS Act, stablecoins).</p>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <hr />
+
+      <!-- ==================== WHO'S ASKING ==================== -->
+      <div>
+        <h2 class="text-lg font-semibold mb-1">👥 Who's asking the Policy Team</h2>
+        <p class="text-muted-foreground text-sm mb-4">Top requesters across all Slack channels — the internal demand signal for policy expertise.</p>
+      </div>
+      <div class="rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 py-4">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="border-b border-border">
+              <tr>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Person</th>
+                <th class="px-4 py-3 text-right font-medium text-muted-foreground">Messages</th>
+                <th class="px-4 py-3 text-left font-medium text-muted-foreground">Typical Ask</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y">
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Matthias Bauer-Langgartner</td><td class="px-4 py-3 text-right">9</td><td class="px-4 py-3 text-muted-foreground">NEMEA GTM support, regulatory updates</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Mike Meisels</td><td class="px-4 py-3 text-right">8</td><td class="px-4 py-3 text-muted-foreground">ANZ regulatory landscape, news commentary</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Rob Elphick</td><td class="px-4 py-3 text-right">6</td><td class="px-4 py-3 text-muted-foreground">FCA engagement, UK GTM support</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Francesca Mormanni</td><td class="px-4 py-3 text-right">5</td><td class="px-4 py-3 text-muted-foreground">Marketing content review requests</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Avril Sindhu Anbarasu</td><td class="px-4 py-3 text-right">5</td><td class="px-4 py-3 text-muted-foreground">Media queries, APAC content</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Madeleine Kennedy</td><td class="px-4 py-3 text-right">4</td><td class="px-4 py-3 text-muted-foreground">Press statements, media</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Sean Zhu</td><td class="px-4 py-3 text-right">4</td><td class="px-4 py-3 text-muted-foreground">AI/tech regulatory, product</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Carla Dobronauteanu</td><td class="px-4 py-3 text-right">4</td><td class="px-4 py-3 text-muted-foreground">Events, GTM</td></tr>
+              <tr class="hover:bg-muted transition-colors"><td class="px-4 py-3 font-medium">Liana Rizzi</td><td class="px-4 py-3 text-right">3</td><td class="px-4 py-3 text-muted-foreground">Intel requests, webinars</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="text-center pt-6">
+        <p class="text-xs text-muted-foreground">
+          Chainalysis Policy Team ·
+          <a href="https://docs.google.com/spreadsheets/d/1lMeoK00KfXdCRo59n-0Y21jfbhZIcb-3s46uwvBFT5g/edit" class="text-primary hover:underline">Full Tracker</a> ·
+          Auto-refreshes fortnightly ·
+          Audit data from 19 May 2026
+        </p>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script>
+      const style = getComputedStyle(document.documentElement);
+      const chart1 = style.getPropertyValue('--chart-1').trim();
+      const chart2 = style.getPropertyValue('--chart-2').trim();
+      const chart3 = style.getPropertyValue('--chart-3').trim();
+      const chart4 = style.getPropertyValue('--chart-4').trim();
+      const chart5 = style.getPropertyValue('--chart-5').trim();
+      const mutedFg = style.getPropertyValue('--muted-foreground').trim();
+      const borderColor = style.getPropertyValue('--border').trim();
+
+      Chart.defaults.color = mutedFg;
+      Chart.defaults.borderColor = borderColor;
+      Chart.defaults.font.family = 'system-ui, sans-serif';
+
+      // Activity by Category — horizontal bar
+      new Chart(document.getElementById('activityChart'), {
+        type: 'bar',
+        data: {
+          labels: [
+            'Customer & Sales',
+            'Consultations',
+            'Content & Blog',
+            'Briefings',
+            'Position Papers',
+            'Events & Speaking',
+            'Research',
+            'Internal Planning',
+            'Product Input',
+            'Media & Press'
+          ],
+          datasets: [{
+            label: 'Total Items',
+            data: [92, 91, 73, 44, 39, 21, 16, 10, 9, 8],
+            backgroundColor: [
+              chart1 + 'B3', chart2 + 'B3', chart3 + 'B3', chart4 + 'B3', chart5 + 'B3',
+              chart1 + '80', chart2 + '80', chart3 + '80', chart4 + '80', chart5 + '80'
+            ],
+            borderRadius: 4,
+            borderSkipped: false,
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.parsed.x} items`
+              }
+            }
+          },
+          scales: {
+            x: { beginAtZero: true, grid: { color: borderColor + '40' } },
+            y: { grid: { display: false } }
+          }
+        }
+      });
+
+      // Where the Work Lives — stacked bar
+      new Chart(document.getElementById('sourceChart'), {
+        type: 'bar',
+        data: {
+          labels: [
+            'Customer & Sales',
+            'Consultations',
+            'Content & Blog',
+            'Briefings',
+            'Position Papers',
+            'Events',
+            'Research',
+            'Planning',
+            'Product Input',
+            'Media'
+          ],
+          datasets: [
+            {
+              label: 'Slack',
+              data: [62, 15, 2, 0, 12, 21, 0, 0, 9, 8],
+              backgroundColor: chart1 + 'B3',
+              borderRadius: 4,
+            },
+            {
+              label: 'Docs / Confluence',
+              data: [30, 76, 71, 44, 27, 0, 16, 10, 0, 0],
+              backgroundColor: chart2 + 'B3',
+              borderRadius: 4,
+            }
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.x} items`
+              }
+            }
+          },
+          scales: {
+            x: { stacked: true, beginAtZero: true, grid: { color: borderColor + '40' } },
+            y: { stacked: true, grid: { display: false } }
+          }
+        }
+      });
+
+      // Workload Distribution — doughnut
+      new Chart(document.getElementById('workloadChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Jordan (~112)', 'Matthias (~33)', 'Lauren (~3)', 'Unassigned (~103)'],
+          datasets: [{
+            data: [112, 33, 3, 103],
+            backgroundColor: [chart1 + 'CC', chart2 + 'CC', chart3 + 'CC', chart4 + '80'],
+            borderWidth: 0,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '60%',
+          plugins: {
+            legend: { position: 'bottom', labels: { font: { size: 11 } } },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.label}: ${ctx.parsed} items`
+              }
+            }
+          }
+        }
+      });
+
+      // Response Output — bar
+      new Chart(document.getElementById('responseChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Jordan', 'Matthias', 'Lauren'],
+          datasets: [{
+            label: 'Responses Submitted',
+            data: [6, 2, 0],
+            backgroundColor: [chart2 + 'B3', chart2 + 'B3', chart2 + '40'],
+            borderRadius: 4,
+            borderSkipped: false,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.parsed.y} responses`
+              }
+            }
+          },
+          scales: {
+            y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: borderColor + '40' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    </script>
+  </body>
 </html>
