@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Policy Engagement Readout — Pipeline Guide</title>
+    <style>
+    :root { --background:#fff;--foreground:#0a0a0a;--card:#fff;--muted:#f5f5f5;--muted-foreground:#737373;--primary:#2563eb;--primary-foreground:#fff;--border:#e5e5e5;--destructive:#dc2626;--success:#16a34a;--warning:#d97706;--info:#2563eb; }
+    @media(prefers-color-scheme:dark){:root{--background:#0a0a0a;--foreground:#fafafa;--card:#141414;--muted:#1c1c1c;--muted-foreground:#a3a3a3;--primary:#3b82f6;--primary-foreground:#fff;--border:#262626;--destructive:#ef4444;--success:#22c55e;--warning:#f59e0b;--info:#3b82f6;}}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{line-height:1.5;-webkit-font-smoothing:antialiased}
+    .bg-background{background:var(--background)}.text-foreground{color:var(--foreground)}.text-muted-foreground{color:var(--muted-foreground)}.min-h-screen{min-height:100vh}.max-w-4xl{max-width:56rem}.mx-auto{margin:0 auto}.px-4{padding:0 1rem}.py-10{padding:2.5rem 0}.space-y-6>*+*{margin-top:1.5rem}.space-y-4>*+*{margin-top:1rem}.text-xs{font-size:.75rem;line-height:1rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-2xl{font-size:1.5rem;line-height:2rem}.font-medium{font-weight:500}.font-semibold{font-weight:600}.font-bold{font-weight:700}.tracking-tight{letter-spacing:-.025em}
+</style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      body { font-family: 'Inter', system-ui, sans-serif; }
+      .step-card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+        overflow: hidden;
+      }
+      .step-header {
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border-bottom: 1px solid var(--border);
+      }
+      .step-num {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1rem;
+        flex-shrink: 0;
+      }
+      .step-header h3 { margin: 0; font-size: 1rem; }
+      .step-header .step-when {
+        margin-left: auto;
+        font-size: 0.75rem;
+        color: var(--muted-foreground);
+        background: var(--muted);
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-weight: 600;
+      }
+      .step-body { padding: 18px 20px; }
+      .step-body p { font-size: 0.88rem; line-height: 1.65; margin: 0 0 12px; }
+      .where-box {
+        padding: 14px 16px;
+        border-radius: 8px;
+        background: var(--muted);
+        margin: 12px 0;
+        font-size: 0.84rem;
+      }
+      .where-box .where-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted-foreground);
+        margin-bottom: 6px;
+      }
+      .where-box a { color: var(--primary); text-decoration: none; font-weight: 600; }
+      .where-box a:hover { text-decoration: underline; }
+      .what-happens {
+        padding: 12px 16px;
+        border-left: 3px solid var(--primary);
+        border-radius: 0 8px 8px 0;
+        background: var(--card);
+        border-top: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        margin: 12px 0;
+        font-size: 0.84rem;
+        line-height: 1.6;
+      }
+      .what-happens .wh-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--primary);
+        margin-bottom: 4px;
+      }
+      .output-pills {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin: 10px 0;
+      }
+      .output-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        background: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+      .output-pill .pill-icon { font-size: 1rem; }
+      .arrow-down {
+        text-align: center;
+        font-size: 1.4rem;
+        color: var(--muted-foreground);
+        padding: 6px 0;
+      }
+      .data-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 0.82rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        margin: 12px 0;
+      }
+      .data-table th {
+        background: var(--muted);
+        padding: 8px 12px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted-foreground);
+        border-bottom: 1px solid var(--border);
+      }
+      .data-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      .data-table tr:last-child td { border-bottom: none; }
+      code {
+        background: var(--muted);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.82rem;
+        font-family: monospace;
+      }
+      .tip-box {
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: 1px solid var(--warning);
+        background: var(--card);
+        font-size: 0.84rem;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        margin: 12px 0;
+      }
+    </style>
+  </head>
+  <body class="bg-background text-foreground min-h-screen">
+    <div class="max-w-4xl mx-auto px-4 py-10 space-y-6">
+
+      <!-- Header -->
+      <div>
+        <p class="text-xs font-semibold text-muted-foreground" style="text-transform:uppercase;letter-spacing:0.1em;">Operational Guide</p>
+        <h1 class="text-2xl font-bold tracking-tight" style="margin:4px 0 2px;">Policy Engagement Readout Pipeline</h1>
+        <p class="text-muted-foreground text-sm">How to go from raw event notes → polished strategic readout</p>
+      </div>
+
+      <!-- Overview -->
+      <div style="padding:16px 20px;border-radius:12px;border:1px solid var(--border);background:var(--card);">
+        <p class="text-sm font-semibold" style="margin:0 0 8px;">What this system does</p>
+        <p class="text-sm" style="margin:0 0 10px;line-height:1.65;color:var(--muted-foreground);">
+          After attending a policy event, you log it via a Google Form. Then — when you're ready — you add your detailed notes (paste them or link a Google Doc). The system auto-extracts structured intelligence using AI. When you want to compile a readout for leadership, you invoke the workflow and it produces a polished strategic document published to Google Docs, GitHub Pages, and Slack.
+        </p>
+        <p class="text-sm font-semibold" style="margin:0 0 6px;">The pieces</p>
+        <table class="data-table">
+          <thead>
+            <tr><th>Component</th><th>What it is</th><th>Link</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Google Form</strong></td>
+              <td>Quick event logger — fill in after each event (name, date, location, who, what we did, brief notes)</td>
+              <td><a href="https://docs.google.com/spreadsheets/d/1lMeoK00KfXdCRo59n-0Y21jfbhZIcb-3s46uwvBFT5g/edit" style="color:var(--primary);">Tracker Sheet</a></td>
+            </tr>
+            <tr>
+              <td><strong>Tracker Sheet</strong></td>
+              <td>Central spreadsheet with tabs: Form Responses, Key Dates, Events, Event Enrichments, Quick Log, and more (293 items tracked)</td>
+              <td><a href="https://docs.google.com/spreadsheets/d/1lMeoK00KfXdCRo59n-0Y21jfbhZIcb-3s46uwvBFT5g/edit" style="color:var(--primary);">Open Sheet</a></td>
+            </tr>
+            <tr>
+              <td><strong>Workflow</strong></td>
+              <td><code>policy-engagement-readout</code> — the automation that enriches events and generates readouts</td>
+              <td>Invoke via Chain</td>
+            </tr>
+            <tr>
+              <td><strong>GitHub Pages</strong></td>
+              <td>Where the final readout is published as a shareable web page</td>
+              <td><a href="https://jordan-wain.github.io/policy-dashboard/engagement-readout.html" style="color:var(--primary);">Live Readout</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-num">1</span>
+          <div>
+            <h3>Log the event</h3>
+            <p class="text-xs text-muted-foreground" style="margin:0;">Immediately after — takes 2 minutes</p>
+          </div>
+          <span class="step-when">After every event</span>
+        </div>
+        <div class="step-body">
+          <p>Fill in the <strong>Google Form</strong> with the basics. This is a quick log, not your detailed notes — just enough to record that you were there.</p>
+          
+          <div class="where-box">
+            <div class="where-label">📍 Where to do this</div>
+            <strong>Google Form</strong> → responses land in the <a href="https://docs.google.com/spreadsheets/d/1lMeoK00KfXdCRo59n-0Y21jfbhZIcb-3s46uwvBFT5g/edit#gid=0">"Form Responses 1" tab</a> of the tracker sheet
+          </div>
+
+          <p><strong>What to fill in:</strong></p>
+          <table class="data-table">
+            <thead><tr><th>Field</th><th>What to put</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td>Event Name</td><td>Official name of the event</td><td>RUSI — Crypto and Sanctions Evasion</td></tr>
+              <tr><td>Date</td><td>When it happened</td><td>10 June 2026</td></tr>
+              <tr><td>Location</td><td>City, country</td><td>Brussels, Belgium</td></tr>
+              <tr><td>Who attended</td><td>Chainalysis attendees</td><td>Jordan Wain</td></tr>
+              <tr><td>What did we do</td><td>Role (panellist, roundtable, observer)</td><td>Roundtable participant, invited</td></tr>
+              <tr><td>Brief Notes</td><td>1-2 sentences — the headline outcome</td><td>EEAS invited us to share intelligence</td></tr>
+              <tr><td>Timing</td><td>Week/period</td><td>Week 1 — June</td></tr>
+            </tbody>
+          </table>
+
+          <div class="tip-box">
+            <span>💡</span>
+            <div>Don't worry about detail here. The form is just a log entry so nothing gets lost. Your real notes come in Step 2.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-down">↓</div>
+
+      <!-- STEP 2 -->
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-num">2</span>
+          <div>
+            <h3>Add your detailed notes</h3>
+            <p class="text-xs text-muted-foreground" style="margin:0;">Within a day or two of the event</p>
+          </div>
+          <span class="step-when">Within 48 hours</span>
+        </div>
+        <div class="step-body">
+          <p>This is where the real intelligence goes. You have <strong>two options</strong> — use whichever is easier:</p>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0;">
+            <div style="padding:14px 16px;border-radius:8px;border:1px solid var(--border);background:var(--card);">
+              <p class="text-sm font-bold" style="margin:0 0 6px;">Option A: Write in a Google Doc</p>
+              <p class="text-xs text-muted-foreground" style="margin:0 0 8px;">Best when your notes are long or collaborative</p>
+              <ol style="font-size:0.84rem;padding-left:18px;line-height:1.7;color:var(--muted-foreground);">
+                <li>Write your detailed notes in a Google Doc (any format — raw is fine)</li>
+                <li>Open <strong>Chain</strong> and say:<br><code>Enrich "RUSI Sanctions" using this doc: [paste Google Doc URL]</code></li>
+                <li>Chain invokes the workflow, which reads the doc and auto-extracts everything</li>
+              </ol>
+            </div>
+            <div style="padding:14px 16px;border-radius:8px;border:1px solid var(--border);background:var(--card);">
+              <p class="text-sm font-bold" style="margin:0 0 6px;">Option B: Paste notes directly</p>
+              <p class="text-xs text-muted-foreground" style="margin:0 0 8px;">Best when your notes are shorter</p>
+              <ol style="font-size:0.84rem;padding-left:18px;line-height:1.7;color:var(--muted-foreground);">
+                <li>Open <strong>Chain</strong> and say:<br><code>Enrich "FINMA Bilateral" with these notes:</code></li>
+                <li>Paste your raw notes after the prompt</li>
+                <li>Chain invokes the workflow, AI extracts everything</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="what-happens">
+            <div class="wh-label">What the AI auto-extracts from your raw notes</div>
+            <ul style="margin:4px 0 0;padding-left:18px;line-height:1.8;">
+              <li><strong>Competitors present</strong> — Elliptic, Crystal, TRM</li>
+              <li><strong>Clients in the room</strong> — identifies Chainalysis customers</li>
+              <li><strong>Key attendees</strong> — names, roles, organisations</li>
+              <li><strong>Our contributions</strong> — what we argued, presented, pushed</li>
+              <li><strong>Key insights</strong> — intelligence not publicly available</li>
+              <li><strong>Doors opened</strong> — relationships, follow-ups created</li>
+              <li><strong>Recommended actions</strong> — what to do next</li>
+              <li><strong>Priority mapping</strong> — maps to P1/P2/P3 strategic priorities</li>
+              <li><strong>Internal inform</strong> — which teams need to know (Product, Sales, Research, etc.)</li>
+            </ul>
+          </div>
+
+          <div class="where-box">
+            <div class="where-label">📍 Where the enriched data lands</div>
+            <a href="https://docs.google.com/spreadsheets/d/1lMeoK00KfXdCRo59n-0Y21jfbhZIcb-3s46uwvBFT5g/edit">"Event Enrichments" tab</a> in the tracker sheet — one row per event with all extracted fields. You can review and edit this if the AI got anything wrong.
+          </div>
+
+          <div class="tip-box">
+            <span>💡</span>
+            <div><strong>What makes good notes:</strong> Focus on what <em>we said</em> (our arguments, positions, data we presented), not just what we heard. Include direct quotes where you can. Name names. Flag anything that's not public.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-down">↓</div>
+
+      <!-- STEP 3 -->
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-num">3</span>
+          <div>
+            <h3>Generate the readout</h3>
+            <p class="text-xs text-muted-foreground" style="margin:0;">When you're ready to compile for leadership</p>
+          </div>
+          <span class="step-when">End of engagement period</span>
+        </div>
+        <div class="step-body">
+          <p>Once all events are enriched, you generate the readout. Open <strong>Chain</strong> and say:</p>
+          
+          <div style="padding:14px 16px;border-radius:10px;background:var(--muted);font-family:monospace;font-size:0.84rem;line-height:1.6;margin:12px 0;">
+            Generate a readout covering the last 3 weeks of events.<br>
+            Title: "Engagement Readout"<br>
+            Date range: "9–25 June 2026"<br>
+            Authors: "Jordan Wain & Matthias B-L"<br>
+            Publish to GitHub Pages.
+          </div>
+
+          <p>Chain invokes the workflow in <code>generate_readout</code> mode. It pulls all enriched events from the tracker, generates the readout, and publishes it.</p>
+
+          <div class="what-happens">
+            <div class="wh-label">What the readout includes (automatically)</div>
+            <ul style="margin:4px 0 0;padding-left:18px;line-height:1.8;">
+              <li><strong>Hero header</strong> with title, authors, date range</li>
+              <li><strong>Scorecard</strong> — events, bilaterals, intel items, outcomes, competitors, actions</li>
+              <li><strong>Events attended</strong> — two-column grid (Week 1 / Week 2)</li>
+              <li><strong>Executive summary</strong> — outcomes first → what we pushed → access vs competitors</li>
+              <li><strong>Priority mapping</strong> — P1/P2/P3 buckets against strategic priorities</li>
+              <li><strong>Strategic takeaways</strong> — with P-tags, source event pills, and "→ Inform" lines</li>
+              <li><strong>Insights not available online</strong> — flagged non-public intel</li>
+              <li><strong>Competitive positioning</strong> — multi-week table</li>
+              <li><strong>Event detail</strong> — collapsible cards with full content</li>
+              <li><strong>Action tracker</strong> — table with priority colours, owners, deadlines, status</li>
+            </ul>
+          </div>
+
+          <p class="text-sm font-semibold" style="margin:16px 0 6px;">Outputs produced:</p>
+          <div class="output-pills">
+            <div class="output-pill"><span class="pill-icon">📄</span> Google Doc — for sharing with boss</div>
+            <div class="output-pill"><span class="pill-icon">🌐</span> GitHub Pages — viewable online by anyone with the link</div>
+            <div class="output-pill"><span class="pill-icon">💬</span> Slack notification — posted automatically</div>
+          </div>
+
+          <div class="where-box">
+            <div class="where-label">📍 Where to find the outputs</div>
+            <strong>Google Doc:</strong> Link returned by Chain and posted to Slack<br>
+            <strong>GitHub Pages:</strong> <a href="https://jordan-wain.github.io/policy-dashboard/engagement-readout.html">jordan-wain.github.io/policy-dashboard/engagement-readout.html</a><br>
+            <strong>Slack:</strong> Notification posts to the policy channel automatically
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-down">↓</div>
+
+      <!-- STEP 4 -->
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-num">4</span>
+          <div>
+            <h3>Refine in Chain (optional)</h3>
+            <p class="text-xs text-muted-foreground" style="margin:0;">If the readout needs adjustments</p>
+          </div>
+          <span class="step-when">Optional</span>
+        </div>
+        <div class="step-body">
+          <p>The generated readout is a strong first draft. If you want to adjust it — add events, tighten messaging, change emphasis — work with Chain directly:</p>
+          <ul style="font-size:0.84rem;padding-left:18px;line-height:1.8;color:var(--muted-foreground);">
+            <li><em>"Add a takeaway about tokenised deposits rising as a priority"</em></li>
+            <li><em>"The exec summary needs to lead with what we pushed, not what we heard"</em></li>
+            <li><em>"Fold in this new event from Wednesday evening"</em></li>
+            <li><em>"Tighten the messaging — my boss loses concentration fast"</em></li>
+            <li><em>"Publish the updated version to GitHub Pages"</em></li>
+          </ul>
+          <p>Chain edits the HTML directly, re-publishes to GitHub Pages, and updates the Google Doc.</p>
+        </div>
+      </div>
+
+      <!-- SHORTCUT -->
+      <div style="padding:18px 22px;border-radius:12px;border:2px solid var(--primary);background:var(--card);">
+        <p class="text-sm font-bold" style="margin:0 0 8px;">⚡ Shortcut: Quick Readout (skip enrichment)</p>
+        <p class="text-sm" style="margin:0 0 10px;line-height:1.65;color:var(--muted-foreground);">
+          If you're in a hurry and have all your notes ready, you can skip Steps 1–2 and go straight to readout. Open Chain and say:
+        </p>
+        <div style="padding:12px 16px;border-radius:8px;background:var(--muted);font-family:monospace;font-size:0.84rem;line-height:1.6;">
+          Generate a quick readout from these notes and this Google Doc:<br>
+          [paste your notes]<br>
+          Google Docs: [URL 1], [URL 2]
+        </div>
+        <p class="text-xs text-muted-foreground" style="margin:10px 0 0;">This uses <code>quick_readout</code> mode — notes go straight to the AI without being saved to the enrichment tracker. Useful for one-off readouts but you lose the structured data in the sheet.</p>
+      </div>
+
+      <!-- DATA ARCHITECTURE -->
+      <div>
+        <h2 class="text-lg font-bold" style="margin:0 0 12px;">Data Architecture</h2>
+        <table class="data-table">
+          <thead><tr><th>Tab in Tracker Sheet</th><th>What's in it</th><th>How it gets populated</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Form Responses 1</strong></td><td>Raw form submissions — event name, date, location, who, what, brief notes</td><td>Google Form (automatic)</td></tr>
+            <tr><td><strong>Key Dates</strong></td><td>Master tracker — 293 items including consultations, events, deadlines</td><td>Manual + Google Form</td></tr>
+            <tr><td><strong>Events</strong></td><td>Discovered events with triage status</td><td>Manual / automated discovery</td></tr>
+            <tr><td><strong>Quick Log</strong></td><td>Lightweight event log — date, name, location, who, type, notes</td><td>Manual</td></tr>
+            <tr><td><strong>Event Enrichments</strong></td><td>AI-enriched event data — all extracted fields, priority mapping, internal inform</td><td><code>enrich_event</code> workflow mode</td></tr>
+            <tr><td><strong>Priority Summary</strong></td><td>Coverage assessment per strategic priority (P1/P2/P3)</td><td>Manual</td></tr>
+            <tr><td><strong>Policy Response Pipeline</strong></td><td>Active consultation responses in progress</td><td>Manual</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- WORKFLOW MODES -->
+      <div>
+        <h2 class="text-lg font-bold" style="margin:0 0 12px;">Workflow Modes Reference</h2>
+        <table class="data-table">
+          <thead><tr><th>Mode</th><th>When to use</th><th>Input</th><th>Output</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>enrich_event</code></td>
+              <td>After each event — add your detailed notes</td>
+              <td>Event name + raw notes (pasted) or Google Doc link</td>
+              <td>AI-extracted fields saved to Event Enrichments tab</td>
+            </tr>
+            <tr>
+              <td><code>generate_readout</code></td>
+              <td>End of engagement period — compile for leadership</td>
+              <td>Title, date range, author. Pulls from enriched events automatically.</td>
+              <td>Google Doc + GitHub Pages + Slack notification</td>
+            </tr>
+            <tr>
+              <td><code>quick_readout</code></td>
+              <td>Shortcut — skip enrichment, go straight to readout</td>
+              <td>Raw notes + Google Doc links. All in one go.</td>
+              <td>Google Doc + GitHub Pages + Slack notification</td>
+            </tr>
+            <tr>
+              <td><code>list_events</code></td>
+              <td>Check what's been logged and what still needs enrichment</td>
+              <td>None</td>
+              <td>List of events with enrichment status (✓ / —)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Example conversation -->
+      <div>
+        <h2 class="text-lg font-bold" style="margin:0 0 12px;">Example: What to say to Chain</h2>
+        <div class="space-y-4">
+          <div style="padding:14px 16px;border-radius:8px;border:1px solid var(--border);background:var(--card);">
+            <p class="text-xs font-semibold text-muted-foreground" style="margin:0 0 6px;text-transform:uppercase;">After an event — enriching</p>
+            <p style="font-size:0.88rem;margin:0;line-height:1.6;"><em>"Enrich the FINMA bilateral from PZF. Here are my notes: [paste]. No competitors present. Key contact was Matthias Obrecht."</em></p>
+          </div>
+          <div style="padding:14px 16px;border-radius:8px;border:1px solid var(--border);background:var(--card);">
+            <p class="text-xs font-semibold text-muted-foreground" style="margin:0 0 6px;text-transform:uppercase;">After an event — using a Google Doc</p>
+            <p style="font-size:0.88rem;margin:0;line-height:1.6;"><em>"Enrich the AMLA Conference using this doc: https://docs.google.com/document/d/1eRcc7nmk..."</em></p>
+          </div>
+          <div style="padding:14px 16px;border-radius:8px;border:1px solid var(--border);background:var(--card);">
+            <p class="text-xs font-semibold text-muted-foreground" style="margin:0 0 6px;text-transform:uppercase;">Ready to compile</p>
+            <p style="font-size:0.88rem;margin:0;line-height:1.6;"><em>"Generate a readout for 9–25 June 2026. Publish to GitHub Pages. Title: Engagement Readout. Authors: Jordan Wain & Matthias B-L."</em></p>
+          </div>
+          <div style="padding:14px 16px;border-radius:8px;border:1px solid var(--border);background:var(--card);">
+            <p class="text-xs font-semibold text-muted-foreground" style="margin:0 0 6px;text-transform:uppercase;">Checking status</p>
+            <p style="font-size:0.88rem;margin:0;line-height:1.6;"><em>"List my events and show which ones still need enrichment."</em></p>
+          </div>
+          <div style="padding:14px 16px;border-radius:8px;border:1px solid var(--border);background:var(--card);">
+            <p class="text-xs font-semibold text-muted-foreground" style="margin:0 0 6px;text-transform:uppercase;">Quick mode (skip enrichment)</p>
+            <p style="font-size:0.88rem;margin:0;line-height:1.6;"><em>"Generate a quick readout from these docs: [URL 1], [URL 2]. Date range: June 2026."</em></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:28px;">
+        <p class="text-xs text-muted-foreground" style="margin:0;">
+          Pipeline built in Chain · Workflow: <code>policy-engagement-readout</code> · 
+          Tracker: <a href="https://docs.google.com/spreadsheets/d/1lMeoK00KfXdCRo59n-0Y21jfbhZIcb-3s46uwvBFT5g/edit" style="color:var(--primary);">Google Sheet</a> · 
+          Live readout: <a href="https://jordan-wain.github.io/policy-dashboard/engagement-readout.html" style="color:var(--primary);">GitHub Pages</a>
+        </p>
+      </div>
+
+    </div>
+  </body>
+</html>
