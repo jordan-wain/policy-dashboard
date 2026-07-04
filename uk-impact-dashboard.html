@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FCA Consultation Impact Dashboard</title>
+  <link rel="stylesheet" href="/assets/pages-theme.css" />
+  <script src="/assets/chart.min.js"></script>
+  <style>
+    .tl-scroll{overflow-x:auto;padding-bottom:8px}
+    .tl-row{display:flex;gap:0;min-width:max-content;align-items:flex-start;position:relative;padding-top:8px}
+    .tl-row::before{content:'';position:absolute;top:15px;left:20px;right:20px;height:2px;background:var(--border)}
+    .tl-node{flex:0 0 120px;display:flex;flex-direction:column;align-items:center;position:relative}
+    .tl-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;position:relative;z-index:1;margin-bottom:8px;border:2px solid var(--background)}
+    .tl-node-content{text-align:center;max-width:110px}
+    .expand-btn{cursor:pointer;user-select:none}
+    .expand-btn:hover{opacity:0.8}
+    .expand-content{max-height:0;overflow:hidden;transition:max-height 0.3s ease}
+    .expand-content.open{max-height:800px}
+    .ps-card{transition:background-color 0.15s}
+    .ps-card:hover{background-color:var(--accent)}
+    .chevron{display:inline-block;transition:transform 0.2s;font-size:10px}
+    .chevron.open{transform:rotate(90deg)}
+    .pull-quote{border-left:3px solid var(--primary);padding-left:12px;font-style:italic}
+  </style>
+</head>
+<body class="bg-background text-foreground min-h-screen">
+  <div class="max-w-5xl mx-auto px-4 py-10 space-y-6">
+
+    <div class="text-center space-y-2">
+      <h1 class="text-3xl font-bold tracking-tight">FCA Consultation Impact Assessment</h1>
+      <p class="text-muted-foreground text-lg">Chainalysis Policy Advocacy — UK Cryptoasset Regime</p>
+    </div>
+
+    <!-- Pull quote -->
+    <div class="bg-card rounded-lg border border-border p-4">
+      <p class="pull-quote text-sm text-muted-foreground">"The UK cryptoasset regime now requires the kind of analytics capabilities we provide — and we helped shape that requirement across 6 formal consultation responses over 12 months."</p>
+    </div>
+
+    <!-- Context + Expandable PS cards -->
+    <div class="bg-card rounded-lg border border-border p-4 space-y-4">
+      <div>
+        <h3 class="font-semibold">Final Policy Statements — 25 June 2026</h3>
+        <p class="text-sm text-muted-foreground mt-1">The FCA published five Policy Statements setting out the final rules for the UK's cryptoasset regime. Rules take effect October 2027, with an authorisation gateway opening September 2027. Click any PS below for detail.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3" id="psCards">
+        <div class="bg-muted rounded-lg overflow-hidden"><div class="p-3 expand-btn ps-card" onclick="toggle('ps9')"><div class="flex items-center justify-between"><div class="font-medium text-sm">PS26/9</div><span class="chevron" id="chev-ps9">▶</span></div><div class="text-xs text-muted-foreground">Admissions, Disclosures & Market Abuse</div></div><div class="expand-content" id="ps9"><div class="px-3 pb-3 space-y-1 text-xs text-muted-foreground border-t border-border pt-2"><p>Responds to <strong>CP25/41</strong>.</p><p>• Industry-led market abuse model — UK QCATPs take primary detection role, not FCA</p><p>• On-chain monitoring: large firms only (≥£10m), narrowed to platform-linked wallets</p><p>• Price dislocation detection required for ALL platforms</p><p>• Fungibility exception removed — each cryptoasset needs its own QCDD</p><p>• DTI standard specified; 5-year record retention (7 on request)</p><p>• 'Legitimate reasons' LMP removed; coin burning and stabilisation kept</p><p class="font-medium text-primary mt-1">Our influence: 31% (8/26 adopted or partial)</p></div></div></div>
+
+        <div class="bg-muted rounded-lg overflow-hidden"><div class="p-3 expand-btn ps-card" onclick="toggle('ps10')"><div class="flex items-center justify-between"><div class="font-medium text-sm">PS26/10</div><span class="chevron" id="chev-ps10">▶</span></div><div class="text-xs text-muted-foreground">Stablecoin Issuance</div></div><div class="expand-content" id="ps10"><div class="px-3 pb-3 space-y-1 text-xs text-muted-foreground border-t border-border pt-2"><p>Responds to <strong>CP25/14</strong>.</p><p>• Statutory trust for backing assets confirmed</p><p>• Simplified backing composition — 5% excess allowed</p><p>• Intragroup custody up to 20%</p><p>• Redemption: max 5 business days; 30 for large with criteria</p><p>• Consumer Duty applies to stablecoin issuance</p><p>• UK QCATPs cannot refuse stablecoin admission on QCDD quality</p><p class="font-medium text-primary mt-1">Our influence: 19% (5/26)</p></div></div></div>
+
+        <div class="bg-muted rounded-lg overflow-hidden"><div class="p-3 expand-btn ps-card" onclick="toggle('ps11')"><div class="flex items-center justify-between"><div class="font-medium text-sm">PS26/11</div><span class="chevron" id="chev-ps11">▶</span></div><div class="text-xs text-muted-foreground">Regulated Activities</div></div><div class="expand-content" id="ps11"><div class="px-3 pb-3 space-y-1 text-xs text-muted-foreground border-t border-border pt-2"><p>Responds to <strong>CP25/40-42</strong> and <strong>CP26/04</strong>.</p><p>• DeFi: case-by-case; decentralisation indicators in guidance later 2026</p><p>• Best execution: overarching arrangements, principles-based</p><p>• Custody: CASS 17 applied; float model 2%</p><p>• Lending/borrowing framework with borrower protections</p><p>• Staking: regulated activity with disclosure requirements</p><p class="font-medium text-primary mt-1">Our influence: 31% (4/13)</p></div></div></div>
+
+        <div class="bg-muted rounded-lg overflow-hidden"><div class="p-3 expand-btn ps-card" onclick="toggle('ps12')"><div class="flex items-center justify-between"><div class="font-medium text-sm">PS26/12</div><span class="chevron" id="chev-ps12">▶</span></div><div class="text-xs text-muted-foreground">Prudential</div></div><div class="expand-content" id="ps12"><div class="px-3 pb-3 space-y-1 text-xs text-muted-foreground border-t border-border pt-2"><p>Capital and prudential elements of <strong>CP25/40-42</strong>.</p><p>• K-SII reduced 2% → 1%; two-tier classification ditched</p><p>• Single 40% net risk position for K-NCP</p><p>• UK stablecoin orders exempted from cryptoasset order definition</p><p class="font-medium text-muted-foreground mt-1">Outside our core advocacy focus</p></div></div></div>
+
+        <div class="bg-muted rounded-lg overflow-hidden"><div class="p-3 expand-btn ps-card" onclick="toggle('ps13')"><div class="flex items-center justify-between"><div class="font-medium text-sm">PS26/13</div><span class="chevron" id="chev-ps13">▶</span></div><div class="text-xs text-muted-foreground">FCA Handbook</div></div><div class="expand-content" id="ps13"><div class="px-3 pb-3 space-y-1 text-xs text-muted-foreground border-t border-border pt-2"><p>Responds to <strong>CP25/25</strong>, <strong>CP26/04</strong>, <strong>CP26/13</strong>.</p><p>• Consumer Duty applied to all regulated crypto activities</p><p>• SM&CR and SYSC applied with crypto-specific risk expectations</p><p>• Financial crime: blockchain analytics capabilities "expected"</p><p>• FCA will not mandate specific technology but expects appropriate tools</p><p>• Perimeter guidance: further PS before Sep 2027 gateway</p><p class="font-medium text-primary mt-1">Our influence: 17% (11/63)</p></div></div></div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="bg-card rounded-lg border border-border p-4 space-y-4">
+      <h3 class="font-semibold">Engagement Timeline</h3>
+      <div class="tl-scroll">
+        <div class="tl-row">
+          <div class="tl-node"><div class="tl-dot bg-primary"></div><div class="tl-node-content"><div class="text-xs font-semibold">Jul 2025</div><div class="text-xs text-muted-foreground mt-1">CP25/14</div><div class="text-xs text-muted-foreground">Stablecoins</div><div class="text-xs text-primary mt-1">29 positions</div></div></div>
+          <div class="tl-node"><div class="tl-dot bg-primary"></div><div class="tl-node-content"><div class="text-xs font-semibold">Nov 2025</div><div class="text-xs text-muted-foreground mt-1">CP25/25</div><div class="text-xs text-muted-foreground">Handbook I</div><div class="text-xs text-primary mt-1">22 positions</div></div></div>
+          <div class="tl-node"><div class="tl-dot" style="background:var(--muted-foreground);opacity:0.4"></div><div class="tl-node-content"><div class="text-xs font-semibold">Nov 2025</div><div class="text-xs text-muted-foreground mt-1">FATF</div><div class="text-xs text-muted-foreground" style="opacity:0.6">(non-public)</div></div></div>
+          <div class="tl-node"><div class="tl-dot bg-primary"></div><div class="tl-node-content"><div class="text-xs font-semibold">Jan 2026</div><div class="text-xs text-muted-foreground mt-1">CP25/40-42</div><div class="text-xs text-muted-foreground">Trading, MARC</div><div class="text-xs text-primary mt-1">21 positions</div></div></div>
+          <div class="tl-node"><div class="tl-dot bg-primary"></div><div class="tl-node-content"><div class="text-xs font-semibold">Feb 2026</div><div class="text-xs text-muted-foreground mt-1">CP25/41</div><div class="text-xs text-muted-foreground">Market Abuse</div><div class="text-xs text-primary mt-1">16 positions</div></div></div>
+          <div class="tl-node"><div class="tl-dot bg-primary"></div><div class="tl-node-content"><div class="text-xs font-semibold">Feb 2026</div><div class="text-xs text-muted-foreground mt-1">CP26/04</div><div class="text-xs text-muted-foreground">Handbook II</div><div class="text-xs text-primary mt-1">19 positions</div></div></div>
+          <div class="tl-node"><div class="tl-dot" style="background:var(--muted-foreground);opacity:0.4"></div><div class="tl-node-content"><div class="text-xs font-semibold">Feb 2026</div><div class="text-xs text-muted-foreground mt-1">UKCBC BoE</div><div class="text-xs text-success mt-1">69% adopted</div></div></div>
+          <div class="tl-node"><div class="tl-dot" style="background:var(--muted-foreground);opacity:0.4"></div><div class="tl-node-content"><div class="text-xs font-semibold">Early 2026</div><div class="text-xs text-muted-foreground mt-1">Lords FSRC</div><div class="text-xs text-muted-foreground">Oral evidence</div></div></div>
+          <div class="tl-node"><div class="tl-dot" style="background:var(--muted-foreground);opacity:0.4"></div><div class="tl-node-content"><div class="text-xs font-semibold">May 2026</div><div class="text-xs text-muted-foreground mt-1">HMT SI</div><div class="text-xs text-muted-foreground">Crypto Regs</div></div></div>
+          <div class="tl-node"><div class="tl-dot bg-primary"></div><div class="tl-node-content"><div class="text-xs font-semibold">May 2026</div><div class="text-xs text-muted-foreground mt-1">CP26/13</div><div class="text-xs text-muted-foreground">Perimeter</div><div class="text-xs text-primary mt-1">21 positions</div></div></div>
+          <div class="tl-node"><div class="tl-dot bg-success" style="width:18px;height:18px;margin-top:-2px"></div><div class="tl-node-content"><div class="text-xs font-bold text-success">Jun 2026</div><div class="text-xs font-semibold mt-1">5 Policy Statements</div><div class="text-xs text-success mt-1">Final rules</div></div></div>
+          <div class="tl-node"><div class="tl-dot border-2" style="border-color:var(--muted-foreground);background:transparent"></div><div class="tl-node-content"><div class="text-xs font-semibold">Sep 2027</div><div class="text-xs text-muted-foreground mt-1">Gateway opens</div></div></div>
+          <div class="tl-node"><div class="tl-dot border-2" style="border-color:var(--muted-foreground);background:transparent"></div><div class="tl-node-content"><div class="text-xs font-semibold">Oct 2027</div><div class="text-xs text-muted-foreground mt-1">Regime live</div></div></div>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 text-xs text-muted-foreground"><span class="flex items-center gap-1"><span style="width:10px;height:10px;border-radius:50%;display:inline-block" class="bg-primary"></span> Direct response</span><span class="flex items-center gap-1"><span style="width:10px;height:10px;border-radius:50%;display:inline-block;opacity:0.4" class="bg-muted-foreground"></span> Other channel</span><span class="flex items-center gap-1"><span style="width:10px;height:10px;border-radius:50%;display:inline-block" class="bg-success"></span> Final output</span><span class="flex items-center gap-1"><span style="width:10px;height:10px;border-radius:50%;display:inline-block;border:2px solid var(--muted-foreground);background:transparent"></span> Future</span></div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div class="bg-card rounded-lg p-4 border border-border text-center"><div class="text-3xl font-bold text-foreground">33</div><div class="text-xs text-muted-foreground">Distinct Asks</div></div>
+      <div class="bg-card rounded-lg p-4 border border-border text-center"><div class="text-3xl font-bold text-success">8</div><div class="text-xs text-muted-foreground">Fully Adopted</div></div>
+      <div class="bg-card rounded-lg p-4 border border-border text-center"><div class="text-3xl font-bold text-warning">6</div><div class="text-xs text-muted-foreground">Partially Adopted</div></div>
+      <div class="bg-card rounded-lg p-4 border border-border text-center"><div class="text-3xl font-bold text-primary">42%</div><div class="text-xs text-muted-foreground">Influence Rate</div></div>
+      <div class="bg-card rounded-lg p-4 border border-border text-center"><div class="text-3xl font-bold text-destructive">6%</div><div class="text-xs text-muted-foreground">Rejection Rate</div></div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-card rounded-lg p-4 border border-border"><h3 class="font-semibold mb-4">Outcome Distribution</h3><canvas id="dedupChart" height="240"></canvas></div>
+      <div class="bg-card rounded-lg p-4 border border-border"><h3 class="font-semibold mb-4">Influence by Policy Statement</h3><canvas id="psChart" height="240"></canvas></div>
+    </div>
+
+    <!-- Adopted -->
+    <div class="bg-card rounded-lg border border-border">
+      <div class="p-4 border-b border-border"><h3 class="font-semibold text-lg">✅ Fully Adopted (8)</h3></div>
+      <div class="divide-y divide-border">
+        <div class="p-4 flex items-start gap-3"><span class="inline-flex items-center rounded-md bg-success/10 px-2 py-1 text-xs font-medium text-success mt-0.5 shrink-0">STRONG</span><div><div class="font-medium">Require off-chain surveillance for all exchanges</div><div class="text-sm text-muted-foreground mt-1">Industry-led approach requires ALL UK QCATPs to prevent, detect and disrupt market abuse</div></div></div>
+        <div class="p-4 flex items-start gap-3"><span class="inline-flex items-center rounded-md bg-success/10 px-2 py-1 text-xs font-medium text-success mt-0.5 shrink-0">STRONG</span><div><div class="font-medium">Outcomes-based regulatory framework</div><div class="text-sm text-muted-foreground mt-1">Clear baselines with principles-based flexibility — our framing adopted</div></div></div>
+        <div class="p-4 flex items-start gap-3"><span class="inline-flex items-center rounded-md bg-success/10 px-2 py-1 text-xs font-medium text-success mt-0.5 shrink-0">STRONG</span><div><div class="font-medium">Retail crypto lending / borrowing with protections</div><div class="text-sm text-muted-foreground mt-1">Framework rather than ban — directly matches our position</div></div></div>
+        <div class="p-4 flex items-start gap-3"><span class="inline-flex items-center rounded-md bg-success/10 px-2 py-1 text-xs font-medium text-success mt-0.5 shrink-0">STRONG</span><div><div class="font-medium">DeFi: regulate controlling entities only</div><div class="text-sm text-muted-foreground mt-1">Case-by-case approach with decentralisation indicators</div></div></div>
+        <div class="p-4 flex items-start gap-3"><span class="inline-flex items-center rounded-md bg-success/10 px-2 py-1 text-xs font-medium text-success mt-0.5 shrink-0">STRONG</span><div><div class="font-medium">SYSC adapted for crypto-specific risks</div><div class="text-sm text-muted-foreground mt-1">Including blockchain analytics capabilities as expected practice</div></div></div>
+        <div class="p-4 flex items-start gap-3"><span class="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary mt-0.5 shrink-0">MOD</span><div><div class="font-medium">Record-keeping, reconciliation and governance reporting</div><div class="text-sm text-muted-foreground mt-1">5-year retention; daily stablecoin reconciliation; staking disclosure requirements</div></div></div>
+      </div>
+    </div>
+
+    <!-- Partially Adopted -->
+    <div class="bg-card rounded-lg border border-border">
+      <div class="p-4 border-b border-border"><h3 class="font-semibold text-lg">🟡 Partially Adopted (6)</h3></div>
+      <div class="divide-y divide-border">
+        <div class="p-4"><div class="font-medium">Blockchain analytics as baseline compliance</div><div class="text-sm text-muted-foreground mt-1">FCA expects "blockchain analytics capabilities" but won't mandate specific tools. Creates demand without formal mandate — arguably the best commercial outcome.</div></div>
+        <div class="p-4"><div class="font-medium">Continuous custodial wallet monitoring</div><div class="text-sm text-muted-foreground mt-1">Required for large platforms but narrowed to platform-linked wallets.</div></div>
+        <div class="p-4"><div class="font-medium">On-chain risk factor guidance</div><div class="text-sm text-muted-foreground mt-1">Admission criteria and inside information examples established — high-level rather than prescriptive.</div></div>
+        <div class="p-4"><div class="font-medium">Stablecoin classification · Territorial scope · MLR-to-FSMA guidance</div><div class="text-sm text-muted-foreground mt-1">Direction of travel aligns with our asks; specific detail deferred to upcoming consultations.</div></div>
+      </div>
+    </div>
+
+    <!-- Rejected + Deferred -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-card rounded-lg border border-border">
+        <div class="p-4 border-b border-border"><h3 class="font-semibold text-lg">❌ Rejected (2)</h3></div>
+        <div class="divide-y divide-border">
+          <div class="p-4 space-y-2">
+            <div class="font-medium text-sm">Revenue threshold for on-chain monitoring</div>
+            <div class="text-xs text-muted-foreground">FCA retained £10m — their modelling captures 95% of the market by revenue.</div>
+            <div class="text-xs mt-2"><strong>Next round:</strong> Counter with alternative modelling showing risk-based tiering captures abuse more effectively than revenue alone.</div>
+          </div>
+          <div class="p-4 space-y-2">
+            <div class="font-medium text-sm">Baseline monitoring for all platforms</div>
+            <div class="text-xs text-muted-foreground">FCA considers baseline MARC controls sufficient.</div>
+            <div class="text-xs mt-2"><strong>Next round:</strong> Propose graduated requirements with lighter-touch options for smaller firms.</div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-card rounded-lg border border-border">
+        <div class="p-4 border-b border-border"><h3 class="font-semibold text-lg">⏳ Respond Next (5 deferred)</h3></div>
+        <div class="divide-y divide-border">
+          <div class="p-4 flex justify-between items-start"><div><div class="font-medium text-sm">DeFi blockchain indicators</div><div class="text-xs text-muted-foreground">Guidance on decentralisation assessment</div></div><div class="inline-flex items-center rounded-md bg-warning/10 px-2 py-1 text-xs font-medium text-warning shrink-0">H2 2026</div></div>
+          <div class="p-4 flex justify-between items-start"><div><div class="font-medium text-sm">A&D transitional arrangements</div><div class="text-xs text-muted-foreground">Deferral for existing cryptoassets</div></div><div class="inline-flex items-center rounded-md bg-warning/10 px-2 py-1 text-xs font-medium text-warning shrink-0">Sep 2026</div></div>
+          <div class="p-4 flex justify-between items-start"><div><div class="font-medium text-sm">Wrapping / bridging treatment</div><div class="text-xs text-muted-foreground">Perimeter guidance</div></div><div class="inline-flex items-center rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted-foreground shrink-0">Pre Sep 2027</div></div>
+          <div class="p-4 flex justify-between items-start"><div><div class="font-medium text-sm">Custody control tests</div><div class="text-xs text-muted-foreground">Further guidance</div></div><div class="inline-flex items-center rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted-foreground shrink-0">TBC</div></div>
+          <div class="p-4 flex justify-between items-start"><div><div class="font-medium text-sm">Policy-as-code / DLT resilience</div><div class="text-xs text-muted-foreground">Automated compliance guidance</div></div><div class="inline-flex items-center rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted-foreground shrink-0">TBC</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Commercial narrative -->
+    <div class="bg-card rounded-lg border border-border p-4 space-y-3">
+      <h3 class="font-semibold text-lg">📈 What This Means Commercially</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-success/10 rounded-lg p-3 space-y-1">
+          <div class="font-medium text-sm text-success">On-chain monitoring required</div>
+          <div class="text-xs text-muted-foreground">Large UK QCATPs must have on-chain monitoring capabilities for market abuse detection. PS26/9 §3.52–3.57.</div>
+        </div>
+        <div class="bg-success/10 rounded-lg p-3 space-y-1">
+          <div class="font-medium text-sm text-success">Blockchain analytics "expected"</div>
+          <div class="text-xs text-muted-foreground">PS26/13 states firms should apply "crypto-specific risks including blockchain analytics capabilities" for financial crime controls.</div>
+        </div>
+        <div class="bg-success/10 rounded-lg p-3 space-y-1">
+          <div class="font-medium text-sm text-success">325 firms in scope</div>
+          <div class="text-xs text-muted-foreground">FCA updated market participant estimate from 180 to 325 firms — all needing compliant systems by Oct 2027.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cross-jurisdiction -->
+    <div class="bg-card rounded-lg border border-border p-4 space-y-4">
+      <h3 class="font-semibold text-lg">🌍 Cross-Jurisdiction Tracking</h3>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-success/10 rounded-lg p-3"><div class="font-medium text-sm">🇬🇧 UK FCA</div><div class="text-xs text-muted-foreground mt-1">✅ 42% influence</div></div>
+        <div class="bg-success/10 rounded-lg p-3"><div class="font-medium text-sm">🇬🇧 UK BoE (UKCBC)</div><div class="text-xs text-muted-foreground mt-1">✅ 69% influence</div></div>
+        <div class="bg-muted rounded-lg p-3"><div class="font-medium text-sm">🇪🇺 EU MiCA / AMLA</div><div class="text-xs text-muted-foreground mt-1">Pipeline ready</div></div>
+        <div class="bg-muted rounded-lg p-3"><div class="font-medium text-sm">🇺🇸 US FinCEN / SEC</div><div class="text-xs text-muted-foreground mt-1">Pipeline ready</div></div>
+      </div>
+    </div>
+
+  </div>
+  <script>
+    function toggle(id){const el=document.getElementById(id);const ch=document.getElementById('chev-'+id);el.classList.toggle('open');ch.classList.toggle('open')}
+    const cc={adopted:'rgba(34,197,94,0.7)',partial:'rgba(250,204,21,0.7)',rejected:'rgba(239,68,68,0.7)',deferred:'rgba(59,130,246,0.6)',notAddr:'rgba(156,163,175,0.5)',already:'rgba(168,162,158,0.4)'};
+    new Chart(document.getElementById('dedupChart'),{type:'doughnut',data:{labels:['Adopted (8)','Partially Adopted (6)','Deferred (5)','Not Addressed (10)','Validated (2)','Rejected (2)'],datasets:[{data:[8,6,5,10,2,2],backgroundColor:[cc.adopted,cc.partial,cc.deferred,cc.notAddr,cc.already,cc.rejected],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:8,font:{size:11}}}}}});
+    new Chart(document.getElementById('psChart'),{type:'bar',data:{labels:['PS26/9\nMarket Abuse','PS26/10\nStablecoins','PS26/11\nActivities','PS26/13\nHandbook'],datasets:[{label:'Adopted',data:[3,2,3,1],backgroundColor:cc.adopted},{label:'Partial',data:[5,3,1,10],backgroundColor:cc.partial},{label:'Rejected',data:[4,0,0,8],backgroundColor:cc.rejected},{label:'Deferred',data:[0,0,0,8],backgroundColor:cc.deferred}]},options:{responsive:true,scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,beginAtZero:true}},plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:8,font:{size:11}}}}}});
+  </script>
+</body>
+</html>
