@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Policy Impact Dashboard</title>
+  <link rel="stylesheet" href="/assets/pages-theme.css" />
+  <script src="/assets/chart.min.js"></script>
+  <style>
+    .expand-btn{cursor:pointer;user-select:none}
+    .expand-btn:hover{opacity:0.8}
+    .expand-content{max-height:0;overflow:hidden;transition:max-height 0.4s ease}
+    .expand-content.open{max-height:3000px}
+    .chevron{display:inline-block;transition:transform 0.2s;font-size:10px}
+    .chevron.open{transform:rotate(90deg)}
+    .country-card{transition:all 0.15s}
+    .country-card:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+    .pull-quote{border-left:3px solid var(--primary);padding-left:12px;font-style:italic}
+    .stat-ring{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+    .flow-step{position:relative;padding-left:28px}
+    .flow-step::before{content:'';position:absolute;left:9px;top:0;bottom:0;width:2px;background:var(--border)}
+    .flow-step:last-child::before{display:none}
+    .flow-dot{width:20px;height:20px;border-radius:50%;position:absolute;left:0;top:2px;display:flex;align-items:center;justify-content:center;font-size:10px;z-index:1}
+    .flow-connector{position:absolute;left:9px;top:22px;bottom:-2px;width:2px;background:var(--border)}
+    .agency-row{display:flex;align-items:center;gap:8px;padding:6px 0}
+    .agency-bar{height:6px;border-radius:3px;min-width:4px}
+  </style>
+</head>
+<body class="bg-background text-foreground min-h-screen">
+  <div class="max-w-5xl mx-auto px-4 py-10 space-y-6">
+
+    <div class="text-center space-y-2">
+      <h1 class="text-3xl font-bold tracking-tight">Global Policy Impact Dashboard</h1>
+      <p class="text-muted-foreground text-lg">Chainalysis Regulatory Advocacy — Measuring What Moved</p>
+    </div>
+
+    <div class="bg-card rounded-lg border border-border p-4">
+      <p class="pull-quote text-sm text-muted-foreground">"Across 28 consultation responses in 6 jurisdictions, we've shaped the rules that will govern our customers' compliance obligations — with blockchain analytics now embedded as an expected capability in the UK's cryptoasset regime."</p>
+    </div>
+
+    <!-- ═══ HOW IT WORKS ═══ -->
+    <div class="bg-card rounded-lg border border-border overflow-hidden">
+      <div class="p-4 expand-btn" onclick="toggle('howit')">
+        <div class="flex items-center justify-between">
+          <h3 class="font-semibold text-lg">How This Works</h3>
+          <span class="chevron" id="chev-howit">▶</span>
+        </div>
+        <p class="text-sm text-muted-foreground mt-1">Every number traces back through a single pipeline — from regulator publication to the positions we took.</p>
+      </div>
+      <div class="expand-content" id="howit">
+        <div class="border-t border-border p-4 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+            <div class="bg-muted rounded-lg p-3 text-center space-y-2">
+              <div class="text-lg">📄</div>
+              <div class="text-xs font-semibold">1. We Respond</div>
+              <div class="text-xs text-muted-foreground">Policy team files a consultation response. Logged in the Policy Tracker with a link to the Google Doc.</div>
+            </div>
+            <div class="bg-muted rounded-lg p-3 text-center space-y-2">
+              <div class="text-lg">📰</div>
+              <div class="text-xs font-semibold">2. Final Rule Drops</div>
+              <div class="text-xs text-muted-foreground">Regulator publishes final rule / policy statement. Someone logs the reference in the Tracker's <code>Final Rule Ref</code> column.</div>
+            </div>
+            <div class="bg-muted rounded-lg p-3 text-center space-y-2">
+              <div class="text-lg">⚙️</div>
+              <div class="text-xs font-semibold">3. Workflow Triggers</div>
+              <div class="text-xs text-muted-foreground">The assessment workflow detects rows where <code>Final Rule Ref</code> is filled but <code>Impact Status</code> is empty. Pulls our response text + final rule.</div>
+            </div>
+            <div class="bg-muted rounded-lg p-3 text-center space-y-2">
+              <div class="text-lg">🔬</div>
+              <div class="text-xs font-semibold">4. Positions Assessed</div>
+              <div class="text-xs text-muted-foreground">LLM extracts our positions, compares against final decisions, deduplicates into distinct asks, scores each as adopted / partial / rejected / deferred.</div>
+            </div>
+            <div class="bg-muted rounded-lg p-3 text-center space-y-2">
+              <div class="text-lg">📊</div>
+              <div class="text-xs font-semibold">5. Results Flow Up</div>
+              <div class="text-xs text-muted-foreground">Influence rate written back to Tracker. Results aggregate: response → agency → jurisdiction → global dashboard.</div>
+            </div>
+          </div>
+          <div class="bg-muted rounded-lg p-3">
+            <div class="text-xs text-muted-foreground text-center">
+              <strong>Aggregation chain:</strong> Individual positions → deduplicated per response → combined per agency (FCA, FinCEN...) → rolled up per jurisdiction (UK, US...) → global headline
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global summary metrics -->
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div class="bg-card rounded-lg p-4 border border-border text-center">
+        <div class="text-2xl font-bold text-foreground">6</div>
+        <div class="text-xs text-muted-foreground mb-2">Jurisdictions</div>
+        <div class="text-xs text-muted-foreground">🇬🇧 UK · 🇺🇸 US · 🇪🇺 EU · 🇸🇬 SG · 🇨🇭 CH · 🌐 FATF</div>
+      </div>
+      <div class="bg-card rounded-lg p-4 border border-border text-center">
+        <div class="text-2xl font-bold text-foreground">28</div>
+        <div class="text-xs text-muted-foreground mb-2">Responses Filed</div>
+        <div class="text-xs text-muted-foreground">🇬🇧 8 · 🇺🇸 11 · 🇪🇺 3 · 🇸🇬 1 · 🇨🇭 1 · 🌐 2 + others</div>
+      </div>
+      <div class="bg-card rounded-lg p-4 border border-border text-center">
+        <div class="text-2xl font-bold text-foreground">8</div>
+        <div class="text-xs text-muted-foreground mb-2">Final Rules Assessed</div>
+        <div class="text-xs text-muted-foreground">🇬🇧 PS26/9-13 (FCA) · BoE PS · HMT SI</div>
+      </div>
+      <div class="bg-card rounded-lg p-4 border border-border text-center">
+        <div class="text-2xl font-bold text-success">39%</div>
+        <div class="text-xs text-muted-foreground mb-2">Weighted Influence</div>
+        <div class="text-xs text-muted-foreground">🇬🇧 FCA 42% · BoE 69% · HMT 17%</div>
+      </div>
+      <div class="bg-card rounded-lg p-4 border border-border text-center">
+        <div class="text-2xl font-bold text-warning">18</div>
+        <div class="text-xs text-muted-foreground mb-2">Awaiting Final Rules</div>
+        <div class="text-xs text-muted-foreground">🇺🇸 11 · 🇪🇺 3 · 🇸🇬 1 · 🇨🇭 1 · 🌐 2</div>
+      </div>
+      <div class="bg-card rounded-lg p-4 border border-border text-center">
+        <div class="text-2xl font-bold text-info">5</div>
+        <div class="text-xs text-muted-foreground mb-2">Deferred — Act Next</div>
+        <div class="text-xs text-muted-foreground">🇬🇧 DeFi guidance · A&D transitional · Wrapping · Custody · DLT resilience</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-card rounded-lg p-4 border border-border">
+        <h3 class="font-semibold mb-4">Influence by Jurisdiction</h3>
+        <canvas id="globalChart" height="220"></canvas>
+      </div>
+      <div class="bg-card rounded-lg p-4 border border-border">
+        <h3 class="font-semibold mb-4">Global Pipeline</h3>
+        <canvas id="pipelineChart" height="220"></canvas>
+      </div>
+    </div>
+
+    <!-- ═══ JURISDICTION CARDS ═══ -->
+
+    <!-- UK -->
+    <div class="bg-card rounded-lg border border-border overflow-hidden country-card">
+      <div class="p-4 expand-btn" onclick="toggle('uk')">
+        <div class="flex items-center gap-4">
+          <div class="stat-ring bg-success/10 text-success">39%</div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-lg font-semibold">🇬🇧 United Kingdom</span>
+                <span class="inline-flex items-center rounded-md bg-success/10 px-2 py-1 text-xs font-medium text-success ml-2">8 final rules assessed</span>
+              </div>
+              <span class="chevron" id="chev-uk">▶</span>
+            </div>
+            <div class="text-sm text-muted-foreground mt-1">8 responses filed · 58 distinct asks · 24 adopted or partial · 5 rejected · 5 deferred</div>
+          </div>
+        </div>
+      </div>
+      <div class="expand-content" id="uk">
+        <div class="border-t border-border p-4 space-y-4">
+          <div class="text-xs text-muted-foreground mb-2">Breakdown by agency — influence rate is per-agency, calculated from deduplicated asks against that agency's final rules.</div>
+
+          <!-- Agency bars -->
+          <div class="space-y-3">
+            <div>
+              <div class="flex items-center justify-between mb-1"><span class="text-sm font-medium">FCA — Cryptoasset Regime (PS26/9-13)</span><span class="text-sm font-semibold text-success">42%</span></div>
+              <div class="flex gap-1 items-center"><div class="agency-bar bg-success" style="width:calc(8/33*100%)"></div><div class="agency-bar bg-warning" style="width:calc(6/33*100%)"></div><div class="agency-bar" style="width:calc(10/33*100%);background:var(--muted-foreground);opacity:0.3"></div><div class="agency-bar bg-info" style="width:calc(5/33*100%)"></div><div class="agency-bar bg-destructive" style="width:calc(2/33*100%)"></div></div>
+              <div class="text-xs text-muted-foreground mt-1">6 responses → 33 asks · 8 adopted · 6 partial · 2 rejected · 5 deferred · 10 not addressed</div>
+              <div class="text-xs text-muted-foreground">Key wins: surveillance for all platforms · outcomes-based framework · DeFi entity-focused · blockchain analytics expected</div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1"><span class="text-sm font-medium">BoE — Stablecoin Regime (via UKCBC coalition)</span><span class="text-sm font-semibold text-success">69%</span></div>
+              <div class="flex gap-1 items-center"><div class="agency-bar bg-success" style="width:55%"></div><div class="agency-bar bg-warning" style="width:14%"></div><div class="agency-bar bg-destructive" style="width:15%"></div><div class="agency-bar bg-info" style="width:8%"></div></div>
+              <div class="text-xs text-muted-foreground mt-1">1 coalition response → 13 asks · 6 adopted · 3 partial · 2 rejected · 1 deferred</div>
+              <div class="text-xs text-muted-foreground">Key wins: holding limits dropped · group entity safeguarding · activity-based rewards</div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1"><span class="text-sm font-medium">HM Treasury — Cryptoassets Regulations SI</span><span class="text-sm font-semibold text-warning">17%</span></div>
+              <div class="flex gap-1 items-center"><div class="agency-bar bg-warning" style="width:17%"></div><div class="agency-bar" style="width:58%;background:var(--muted-foreground);opacity:0.3"></div><div class="agency-bar bg-info" style="width:17%"></div><div class="agency-bar bg-destructive" style="width:8%"></div></div>
+              <div class="text-xs text-muted-foreground mt-1">1 response → 12 asks · 2 partial · 1 rejected · 2 deferred · 7 not addressed (primary legislation)</div>
+              <div class="text-xs text-muted-foreground">Low rate expected — primary legislation defers operational detail to FCA rules</div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 text-xs text-muted-foreground mt-2 flex-wrap">
+            <span class="flex items-center gap-1"><span style="width:10px;height:6px;border-radius:3px;display:inline-block" class="bg-success"></span> Adopted</span>
+            <span class="flex items-center gap-1"><span style="width:10px;height:6px;border-radius:3px;display:inline-block" class="bg-warning"></span> Partial</span>
+            <span class="flex items-center gap-1"><span style="width:10px;height:6px;border-radius:3px;display:inline-block" class="bg-destructive"></span> Rejected</span>
+            <span class="flex items-center gap-1"><span style="width:10px;height:6px;border-radius:3px;display:inline-block" class="bg-info"></span> Deferred</span>
+            <span class="flex items-center gap-1"><span style="width:10px;height:6px;border-radius:3px;display:inline-block;background:var(--muted-foreground);opacity:0.3"></span> Not addressed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- US -->
+    <div class="bg-card rounded-lg border border-border overflow-hidden country-card">
+      <div class="p-4 expand-btn" onclick="toggle('us')">
+        <div class="flex items-center gap-4">
+          <div class="stat-ring bg-muted text-muted-foreground">—</div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-lg font-semibold">🇺🇸 United States</span>
+                <span class="inline-flex items-center rounded-md bg-warning/10 px-2 py-1 text-xs font-medium text-warning ml-2">awaiting final rules</span>
+              </div>
+              <span class="chevron" id="chev-us">▶</span>
+            </div>
+            <div class="text-sm text-muted-foreground mt-1">11 responses filed across OCC, FDIC, FinCEN, Treasury, SEC, CFTC · All in proposed/comment stage</div>
+          </div>
+        </div>
+      </div>
+      <div class="expand-content" id="us">
+        <div class="border-t border-border p-4 space-y-3">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="bg-muted rounded-lg p-3"><div class="text-xs"><strong>OCC</strong> — GENIUS Act NPRM</div><div class="text-xs text-muted-foreground">Stablecoin issuer standards</div></div>
+            <div class="bg-muted rounded-lg p-3"><div class="text-xs"><strong>FDIC</strong> — GENIUS Act NPRM + BSA/Sanctions NPR</div><div class="text-xs text-muted-foreground">3 responses across deposit insurance + AML</div></div>
+            <div class="bg-muted rounded-lg p-3"><div class="text-xs"><strong>FinCEN</strong> — GENIUS + AML modernisation</div><div class="text-xs text-muted-foreground">BSA reform could be highest-impact US rule</div></div>
+            <div class="bg-muted rounded-lg p-3"><div class="text-xs"><strong>Treasury / SEC / CFTC</strong> — State-level principles, broker-dealer, prediction markets</div><div class="text-xs text-muted-foreground">4 responses across market structure</div></div>
+          </div>
+          <div class="text-xs text-muted-foreground">⚡ First final rules expected: OCC/FDIC GENIUS implementation (est. late 2026 – H1 2027)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EU -->
+    <div class="bg-card rounded-lg border border-border overflow-hidden country-card">
+      <div class="p-4 expand-btn" onclick="toggle('eu')">
+        <div class="flex items-center gap-4">
+          <div class="stat-ring bg-muted text-muted-foreground">—</div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-lg font-semibold">🇪🇺 European Union</span>
+                <span class="inline-flex items-center rounded-md bg-warning/10 px-2 py-1 text-xs font-medium text-warning ml-2">awaiting final rules</span>
+              </div>
+              <span class="chevron" id="chev-eu">▶</span>
+            </div>
+            <div class="text-sm text-muted-foreground mt-1">3 responses filed — AMLA RTS + CBI DP12 · MiCA review pending</div>
+          </div>
+        </div>
+      </div>
+      <div class="expand-content" id="eu">
+        <div class="border-t border-border p-4 space-y-2">
+          <div class="bg-muted rounded-lg p-3 text-xs text-muted-foreground"><strong>AMLA</strong> — 2 RTS consultations (CDD, group-wide). Matthias leading. Final RTS est. late 2026.</div>
+          <div class="bg-muted rounded-lg p-3 text-xs text-muted-foreground"><strong>CBI</strong> — DP12 DLT discussion paper. Response submitted.</div>
+          <div class="bg-muted rounded-lg p-3 text-xs text-muted-foreground"><strong>MiCA Review</strong> — Delayed. DeFi focus expected. Matthias leading.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Others -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-card rounded-lg border border-border p-4">
+        <div class="flex items-center gap-3">
+          <div class="stat-ring bg-muted text-muted-foreground" style="width:40px;height:40px;font-size:11px">—</div>
+          <div><div class="font-semibold text-sm">🇸🇬 Singapore</div><div class="text-xs text-muted-foreground">MAS prudential consultation · 1 response</div></div>
+        </div>
+      </div>
+      <div class="bg-card rounded-lg border border-border p-4">
+        <div class="flex items-center gap-3">
+          <div class="stat-ring bg-muted text-muted-foreground" style="width:40px;height:40px;font-size:11px">—</div>
+          <div><div class="font-semibold text-sm">🇨🇭 Switzerland</div><div class="text-xs text-muted-foreground">FINMA FINIG consultation · 1 response</div></div>
+        </div>
+      </div>
+      <div class="bg-card rounded-lg border border-border p-4">
+        <div class="flex items-center gap-3">
+          <div class="stat-ring bg-muted text-muted-foreground" style="width:40px;height:40px;font-size:11px">—</div>
+          <div><div class="font-semibold text-sm">🌐 International</div><div class="text-xs text-muted-foreground">FATF stablecoins + proliferation · 2 responses</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What's coming -->
+    <div class="bg-card rounded-lg border border-border p-4 space-y-4">
+      <h3 class="font-semibold text-lg">📅 Next Final Rules Expected</h3>
+      <div class="space-y-3">
+        <div class="flex items-center gap-3"><span class="inline-flex items-center rounded-md bg-warning/10 px-2 py-1 text-xs font-medium text-warning shrink-0">H2 2026</span><div><div class="text-sm font-medium">🇬🇧 FCA DeFi decentralisation indicators</div><div class="text-xs text-muted-foreground">Deferred from PS26/11. We have positions ready.</div></div></div>
+        <div class="flex items-center gap-3"><span class="inline-flex items-center rounded-md bg-warning/10 px-2 py-1 text-xs font-medium text-warning shrink-0">Sep 2026</span><div><div class="text-sm font-medium">🇬🇧 FCA A&D transitional arrangements</div><div class="text-xs text-muted-foreground">New response needed for deferral consultation.</div></div></div>
+        <div class="flex items-center gap-3"><span class="inline-flex items-center rounded-md bg-warning/10 px-2 py-1 text-xs font-medium text-warning shrink-0">Late 2026</span><div><div class="text-sm font-medium">🇪🇺 AMLA final RTS</div><div class="text-xs text-muted-foreground">First EU impact assessment. 2 responses submitted.</div></div></div>
+        <div class="flex items-center gap-3"><span class="inline-flex items-center rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted-foreground shrink-0">H1 2027</span><div><div class="text-sm font-medium">🇺🇸 GENIUS Act final rules</div><div class="text-xs text-muted-foreground">OCC + FDIC + FinCEN. 5 responses filed. Largest US assessment.</div></div></div>
+        <div class="flex items-center gap-3"><span class="inline-flex items-center rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted-foreground shrink-0">Pre Sep 2027</span><div><div class="text-sm font-medium">🇬🇧 FCA perimeter guidance</div><div class="text-xs text-muted-foreground">Wrapping/bridging, custody tests. Before gateway.</div></div></div>
+      </div>
+    </div>
+
+    <!-- Commercial -->
+    <div class="bg-card rounded-lg border border-border p-4 space-y-3">
+      <h3 class="font-semibold text-lg">📈 Commercial Impact</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-success/10 rounded-lg p-3 space-y-1"><div class="font-medium text-sm text-success">🇬🇧 325 firms in scope</div><div class="text-xs text-muted-foreground">All needing compliant systems by Oct 2027. Blockchain analytics "expected" by FCA.</div></div>
+        <div class="bg-info/10 rounded-lg p-3 space-y-1"><div class="font-medium text-sm text-info">🇪🇺 12+ CASPs and growing</div><div class="text-xs text-muted-foreground">MiCA CASPs via Ireland. AMLA RTS will set AML analytics baseline across EU.</div></div>
+        <div class="bg-warning/10 rounded-lg p-3 space-y-1"><div class="font-medium text-sm text-warning">🇺🇸 GENIUS Act implementation</div><div class="text-xs text-muted-foreground">Stablecoin issuers need BSA compliance. 3 agencies rulemaking simultaneously.</div></div>
+      </div>
+    </div>
+
+    <div class="text-xs text-muted-foreground text-center">
+      Source: Policy Tracker (Key Dates tab, columns AL–AP) · Workflow: <code>consultation-impact-assessment</code> · Auto-updated on assessment completion
+    </div>
+
+  </div>
+
+  <script>
+    function toggle(id){const el=document.getElementById(id);const ch=document.getElementById('chev-'+id);el.classList.toggle('open');ch.classList.toggle('open')}
+
+    const cc={adopted:'rgba(34,197,94,0.7)',partial:'rgba(250,204,21,0.7)',rejected:'rgba(239,68,68,0.7)',deferred:'rgba(59,130,246,0.6)',notAddr:'rgba(156,163,175,0.3)',awaiting:'rgba(168,162,158,0.25)'};
+
+    new Chart(document.getElementById('globalChart'),{type:'bar',data:{
+      labels:['🇬🇧 UK','🇺🇸 US','🇪🇺 EU','🇸🇬 SG','🇨🇭 CH','🌐 Intl'],
+      datasets:[
+        {label:'Adopted',data:[14,0,0,0,0,0],backgroundColor:cc.adopted},
+        {label:'Partial',data:[11,0,0,0,0,0],backgroundColor:cc.partial},
+        {label:'Rejected',data:[5,0,0,0,0,0],backgroundColor:cc.rejected},
+        {label:'Deferred',data:[8,0,0,0,0,0],backgroundColor:cc.deferred},
+        {label:'Awaiting',data:[0,11,3,1,1,2],backgroundColor:cc.awaiting},
+      ]},options:{responsive:true,scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,beginAtZero:true,title:{display:true,text:'Responses',font:{size:11}}}},plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:8,font:{size:11}}}}}});
+
+    new Chart(document.getElementById('pipelineChart'),{type:'doughnut',data:{
+      labels:['Assessed (8 final rules)','Awaiting final rules (18)','Deferred — respond next (5)'],
+      datasets:[{data:[8,18,5],backgroundColor:[cc.adopted,cc.awaiting,cc.deferred],borderWidth:0}]
+    },options:{responsive:true,cutout:'55%',plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:10,font:{size:11}}}}}});
+  </script>
+</body>
+</html>
