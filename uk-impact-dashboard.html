@@ -4,8 +4,51 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FCA Consultation Impact Dashboard</title>
-  <link rel="stylesheet" href="/assets/pages-theme.css" />
-  <script src="/assets/chart.min.js"></script>
+  <style>
+:root{--bg:#ffffff;--fg:#0a0a0a;--card:#ffffff;--card-fg:#0a0a0a;--muted:#f4f4f5;--muted-fg:#71717a;
+--primary:#2563eb;--primary-fg:#ffffff;--border:#e4e4e7;--success:#22c55e;--warning:#f59e0b;
+--destructive:#ef4444;--info:#3b82f6;--accent:#f4f4f5}
+@media(prefers-color-scheme:dark){:root{--bg:#09090b;--fg:#fafafa;--card:#18181b;--card-fg:#fafafa;
+--muted:#27272a;--muted-fg:#a1a1aa;--primary:#3b82f6;--primary-fg:#ffffff;--border:#27272a;
+--success:#22c55e;--warning:#f59e0b;--destructive:#ef4444;--info:#3b82f6;--accent:#27272a}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--fg);line-height:1.5}
+a{color:var(--primary);text-decoration:none}a:hover{text-decoration:underline}
+code{font-family:ui-monospace,monospace;font-size:.85em;background:var(--muted);padding:2px 6px;border-radius:4px}
+.bg-background{background:var(--bg)}.bg-card{background:var(--card)}.bg-muted{background:var(--muted)}
+.text-foreground{color:var(--fg)}.text-muted-foreground{color:var(--muted-fg)}.text-primary{color:var(--primary)}
+.text-success{color:var(--success)}.text-warning{color:var(--warning)}.text-destructive{color:var(--destructive)}.text-info{color:var(--info)}
+.bg-success\/10{background:rgba(34,197,94,.1)}.bg-warning\/10{background:rgba(245,158,11,.1)}
+.bg-destructive\/10{background:rgba(239,68,68,.1)}.bg-primary\/10{background:rgba(37,99,235,.1)}
+.bg-info\/10{background:rgba(59,130,246,.1)}.bg-muted\/50{background:rgba(244,244,245,.5)}
+.border-border{border-color:var(--border)}.border{border:1px solid var(--border)}
+.border-t{border-top:1px solid var(--border)}.border-b{border-bottom:1px solid var(--border)}
+.rounded-lg{border-radius:.5rem}.rounded-md{border-radius:.375rem}.overflow-hidden{overflow:hidden}
+.p-2{padding:.5rem}.p-3{padding:.75rem}.p-4{padding:1rem}.px-2{padding-left:.5rem;padding-right:.5rem}
+.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}
+.px-4{padding-left:1rem;padding-right:1rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}
+.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.mb-1{margin-top:.25rem}.mb-2{margin-bottom:.5rem}
+.mb-4{margin-bottom:1rem}.pt-3{padding-top:.75rem}.pb-3{padding-bottom:.75rem}
+.min-h-screen{min-height:100vh}.max-w-5xl{max-width:64rem}.mx-auto{margin-left:auto;margin-right:auto}
+.space-y-1>*+*{margin-top:.25rem}.space-y-2>*+*{margin-top:.5rem}.space-y-3>*+*{margin-top:.75rem}
+.space-y-4>*+*{margin-top:1rem}.space-y-6>*+*{margin-top:1.5rem}
+.grid{display:grid}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}
+.grid-cols-1{grid-template-columns:1fr}.grid-cols-2{grid-template-columns:repeat(2,1fr)}
+.flex{display:flex}.flex-1{flex:1}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}
+.items-start{align-items:flex-start}.justify-between{justify-content:space-between}
+.gap-1{gap:.25rem}.shrink-0{flex-shrink:0}.inline-flex{display:inline-flex}
+.text-center{text-align:center}.text-xs{font-size:.75rem}.text-sm{font-size:.875rem}
+.text-lg{font-size:1.125rem}.text-xl{font-size:1.25rem}.text-2xl{font-size:1.5rem}
+.text-3xl{font-size:1.875rem}.font-medium{font-weight:500}.font-semibold{font-weight:600}
+.font-bold{font-weight:700}.tracking-tight{letter-spacing:-.025em}
+.divide-y>*+*{border-top:1px solid var(--border)}
+@media(min-width:768px){.md\:grid-cols-2{grid-template-columns:repeat(2,1fr)}
+.md\:grid-cols-3{grid-template-columns:repeat(3,1fr)}
+.md\:grid-cols-4{grid-template-columns:repeat(4,1fr)}
+.md\:grid-cols-5{grid-template-columns:repeat(5,1fr)}
+.md\:grid-cols-6{grid-template-columns:repeat(6,1fr)}}
+</style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <style>
     .tl-scroll{overflow-x:auto;padding-bottom:8px}
     .tl-row{display:flex;gap:0;min-width:max-content;align-items:flex-start;position:relative;padding-top:8px}
